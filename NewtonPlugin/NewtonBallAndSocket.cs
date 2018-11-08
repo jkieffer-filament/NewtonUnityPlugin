@@ -30,10 +30,10 @@ public class NewtonBallAndSocket: NewtonJoint
     {
         NewtonBody child = GetComponent<NewtonBody>();
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointBallAndSocket(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointBallAndSocket(matrix, child.GetBody().GetBody(), otherBody);
 
-        Stiffness = m_stiffness;
+        Stiffness = m_Stiffness;
     }
 
     void OnDrawGizmosSelected()
@@ -46,7 +46,7 @@ public class NewtonBallAndSocket: NewtonJoint
         Gizmos.color = Color.red;
 
         Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
     }
 
     public Vector3 m_posit = Vector3.zero;

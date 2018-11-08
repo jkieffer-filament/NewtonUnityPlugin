@@ -30,10 +30,10 @@ public class NewtonDoubleHinge : NewtonJoint
     {
         NewtonBody child = GetComponent<NewtonBody>();
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointDoubleHinge(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointDoubleHinge(matrix, child.GetBody().GetBody(), otherBody);
 
-        Stiffness = m_stiffness;
+        Stiffness = m_Stiffness;
         EnableLimits_0 = m_enableLimits_0;
     }
 
@@ -47,10 +47,10 @@ public class NewtonDoubleHinge : NewtonJoint
         Gizmos.matrix = bodyMatrix;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
 
         Gizmos.color = Color.cyan;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_GizmoScale);
     }
 
     public bool EnableLimits_0
@@ -62,9 +62,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_enableLimits_0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
             }
         }
@@ -79,9 +79,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_minLimit_0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
             }
         }
@@ -96,9 +96,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_maxLimit_0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
             }
         }
@@ -114,9 +114,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_enableLimits_1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
             }
         }
@@ -131,9 +131,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_minLimit_1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
             }
         }
@@ -148,9 +148,9 @@ public class NewtonDoubleHinge : NewtonJoint
         set
         {
             m_maxLimit_1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_joint;
+                dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
                 joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
             }
         }
@@ -174,8 +174,8 @@ public class NewtonDoubleHingeActuator : NewtonJoint
     {
         NewtonBody child = GetComponent<NewtonBody>();
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointDoubleHingeActuator(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointDoubleHingeActuator(matrix, child.GetBody().GetBody(), otherBody);
 
         TargetAngle0 = m_targetAngle0;
         AngularRate0 = m_angularRate0;
@@ -195,10 +195,10 @@ public class NewtonDoubleHingeActuator : NewtonJoint
 
         Gizmos.matrix = bodyMatrix;
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_GizmoScale);
     }
 
     public float MaxTorque0
@@ -210,9 +210,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_maxTorque0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetMaxToque0(m_maxTorque0);
             }
         }
@@ -227,9 +227,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_angularRate0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetAngularRate0(m_angularRate0);
             }
         }
@@ -244,9 +244,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_targetAngle0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
             }
         }
@@ -261,9 +261,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_minAngle0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
             }
         }
@@ -278,9 +278,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_maxAngle0 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
             }
         }
@@ -289,9 +289,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
     public float GetJointAngle0()
     {
         float angle = 0.0f;
-        if (m_joint != null)
+        if (m_Joint != null)
         {
-            dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+            dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
             angle = joint.GetAngle0();
         }
         return angle;
@@ -320,9 +320,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_maxTorque1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetMaxToque1(m_maxTorque1);
             }
         }
@@ -337,9 +337,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_angularRate1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetAngularRate1(m_angularRate1);
             }
         }
@@ -354,9 +354,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_targetAngle1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
             }
         }
@@ -371,9 +371,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_minAngle1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
             }
         }
@@ -388,9 +388,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
         set
         {
             m_maxAngle1 = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+                dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
                 joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
             }
         }
@@ -399,9 +399,9 @@ public class NewtonDoubleHingeActuator : NewtonJoint
     public float GetJointAngle1()
     {
         float angle = 0.0f;
-        if (m_joint != null)
+        if (m_Joint != null)
         {
-            dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_joint;
+            dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
             angle = joint.GetAngle1();
         }
         return angle;

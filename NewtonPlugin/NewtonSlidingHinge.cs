@@ -31,10 +31,10 @@ public class NewtonJointSlidingHinge: NewtonJoint
         NewtonBody child = GetComponent<NewtonBody>();
 
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointSlidingHinge(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointSlidingHinge(matrix, child.GetBody().GetBody(), otherBody);
 
-        Stiffness = m_stiffness;
+        Stiffness = m_Stiffness;
         EnableLimits = m_enableLimits;
         SetSpringDamper = m_setSpringDamper;
     }
@@ -48,10 +48,10 @@ public class NewtonJointSlidingHinge: NewtonJoint
 
         Gizmos.matrix = bodyMatrix;
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_GizmoScale);
     }
 
     public bool EnableLimits
@@ -63,9 +63,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_enableLimits = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -80,9 +80,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_minLimit = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -97,9 +97,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_maxLimit = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -114,9 +114,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_setSpringDamper = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -131,9 +131,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_springDamperForceMixing = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -148,9 +148,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_springConstant = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -165,9 +165,9 @@ public class NewtonJointSlidingHinge: NewtonJoint
         set
         {
             m_damperConstant = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_joint;
+                dNewtonJointSlidingHinge joint = (dNewtonJointSlidingHinge)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }

@@ -30,10 +30,10 @@ public class NewtonSlider: NewtonJoint
     {
         NewtonBody child = GetComponent<NewtonBody>();
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
 
-        Stiffness = m_stiffness;
+        Stiffness = m_Stiffness;
         EnableLimits = m_enableLimits;
         SetSpringDamper = m_setSpringDamper;
     }
@@ -48,7 +48,7 @@ public class NewtonSlider: NewtonJoint
         Gizmos.color = Color.red;
 
         Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
         if (m_enableLimits)
         {
             // draw hinge limit
@@ -64,9 +64,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_enableLimits = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -81,9 +81,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_minLimit = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -98,9 +98,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_maxLimit = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
             }
         }
@@ -115,9 +115,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_setSpringDamper = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -132,9 +132,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_springDamperForceMixing = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -149,9 +149,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_springConstant = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -166,9 +166,9 @@ public class NewtonSlider: NewtonJoint
         set
         {
             m_damperConstant = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_joint;
+                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
                 joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
             }
         }
@@ -193,8 +193,8 @@ public class NewtonSliderActuator : NewtonJoint
     {
         NewtonBody child = GetComponent<NewtonBody>();
         dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        m_joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
 
         Speed = m_speed;
         MaxForce = m_maxForce;
@@ -211,7 +211,7 @@ public class NewtonSliderActuator : NewtonJoint
         Gizmos.color = Color.red;
 
         Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_gizmoScale);
+        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
     }
 
 
@@ -224,9 +224,9 @@ public class NewtonSliderActuator : NewtonJoint
         set
         {
             m_maxForce = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
                 joint.SetMaxForce(m_maxForce);
             }
         }
@@ -241,9 +241,9 @@ public class NewtonSliderActuator : NewtonJoint
         set
         {
             m_speed = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
                 joint.SetSpeed(m_speed);
             }
         }
@@ -258,9 +258,9 @@ public class NewtonSliderActuator : NewtonJoint
         set
         {
             m_targetPosition = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
                 joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
             }
         }
@@ -275,9 +275,9 @@ public class NewtonSliderActuator : NewtonJoint
         set
         {
             m_minPosition = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
                 joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
             }
         }
@@ -292,9 +292,9 @@ public class NewtonSliderActuator : NewtonJoint
         set
         {
             m_maxPosition = value;
-            if (m_joint != null)
+            if (m_Joint != null)
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
                 joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
             }
         }
@@ -303,9 +303,9 @@ public class NewtonSliderActuator : NewtonJoint
     public float GetPosition()
     {
         float position = 0.0f;
-        if (m_joint != null)
+        if (m_Joint != null)
         {
-            dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+            dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
             position = joint.GetPosition();
         }
         return position;

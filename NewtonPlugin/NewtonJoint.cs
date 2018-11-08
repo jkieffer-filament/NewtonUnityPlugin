@@ -29,14 +29,14 @@ abstract public class NewtonJoint : MonoBehaviour
     {
         get
         {
-            return m_stiffness;
+            return m_Stiffness;
         }
         set
         {
-            m_stiffness = value;
-            if (m_joint != null)
+            m_Stiffness = value;
+            if (m_Joint != null)
             {
-                m_joint.SetStiffness(m_stiffness);
+                m_Joint.SetStiffness(m_Stiffness);
             }
         }
     }
@@ -48,14 +48,19 @@ abstract public class NewtonJoint : MonoBehaviour
 
     void OnDestroy()
     {
-        m_joint.Destroy();
+        m_Joint.Destroy();
     }
 
-    public dNewtonJoint m_joint = null;
-    public NewtonBody m_otherBody = null;
-    public float m_stiffness = 1.0f;
-    public float m_gizmoScale = 1.0f;
-    protected bool initialized = false;
+    [SerializeField]
+    protected dNewtonJoint m_Joint = null;
+    [SerializeField]
+    protected NewtonBody m_OtherBody = null;
+    [SerializeField]
+    protected float m_Stiffness = 1.0f;
+    [SerializeField]
+    protected float m_GizmoScale = 1.0f;
+
+    protected bool m_Initialized = false;
 }
 
 

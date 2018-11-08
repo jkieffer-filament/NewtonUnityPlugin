@@ -28,48 +28,36 @@ public class NewtonGear: NewtonJoint
 {
     public override void InitJoint()
     {
-        Matrix4x4 localMatrix0 = Matrix4x4.identity;
-        Matrix4x4 localMatrix1 = Matrix4x4.identity;
-        localMatrix0.SetTRS(Vector3.zero, Quaternion.Euler(m_rotation), Vector3.one);
-        localMatrix1.SetTRS(Vector3.zero, Quaternion.Euler(m_parentRotation), Vector3.one);
-
-        Vector4 childPin = localMatrix0.GetColumn(0);
-        Vector4 parentPin = localMatrix1.GetColumn(0);
+        Vector3 childPin = m_Pin.normalized;
+        Vector3 parentPin = m_ParentPin.normalized;
 
         NewtonBody child = GetComponent<NewtonBody>();
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
 
         dVector childPin_ = new dVector(childPin.x, childPin.y, childPin.z, 0.0f);
         dVector parentPin_ = new dVector(parentPin.x, parentPin.y, parentPin.z, 0.0f);
-        m_joint = new dNewtonJointGear(m_gearRatio, childPin_, parentPin_, child.GetBody().GetBody(), otherBody);
+        m_Joint = new dNewtonJointGear(m_GearRatio, childPin_, parentPin_, child.GetBody().GetBody(), otherBody);
     }
 
     void OnDrawGizmosSelected()
     {
-        Matrix4x4 bodyMatrix0 = Matrix4x4.identity;
-        Matrix4x4 localMatrix0 = Matrix4x4.identity;
-        bodyMatrix0.SetTRS(transform.position, transform.rotation, Vector3.one);
-        localMatrix0.SetTRS(Vector3.zero, Quaternion.Euler(m_rotation), Vector3.one);
-
         Gizmos.color = Color.cyan;
-        Gizmos.matrix = bodyMatrix0;
-        Gizmos.DrawRay(Vector3.zero, localMatrix0.GetColumn(0) * m_gizmoScale);
-        if (m_otherBody != null)
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawRay(Vector3.zero, m_Pin.normalized * m_GizmoScale);
+        if (m_OtherBody != null)
         {
-            Matrix4x4 bodyMatrix1 = Matrix4x4.identity;
-            Matrix4x4 localMatrix1 = Matrix4x4.identity;
-            bodyMatrix1.SetTRS(m_otherBody.transform.position, m_otherBody.transform.rotation, Vector3.one);
-            localMatrix1.SetTRS(Vector3.zero, Quaternion.Euler(m_parentRotation), Vector3.one);
-
             Gizmos.color = Color.cyan;
-            Gizmos.matrix = bodyMatrix1;
-            Gizmos.DrawRay(Vector3.zero, localMatrix1.GetColumn(0) * m_gizmoScale);
+            Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+            Gizmos.DrawRay(Vector3.zero, m_ParentPin * m_GizmoScale);
         }
     }
 
-    public Vector3 m_rotation = Vector3.zero;
-    public Vector3 m_parentRotation = Vector3.zero;
-    public float m_gearRatio = 1.0f;
+    [SerializeField]
+    private Vector3 m_Pin = Vector3.right;
+    [SerializeField]
+    private Vector3 m_ParentPin = Vector3.right;
+    [SerializeField]
+    private float m_GearRatio = 1.0f;
 }
 
 
@@ -78,67 +66,85 @@ public class NewtonDifferentialGear : NewtonJoint
 {
     public override void InitJoint()
     {
-        Matrix4x4 localMatrix0 = Matrix4x4.identity;
-        Matrix4x4 localMatrix1 = Matrix4x4.identity;
-        Matrix4x4 localMatrix2 = Matrix4x4.identity;
-        localMatrix0.SetTRS(Vector3.zero, Quaternion.Euler(m_rotation), Vector3.one);
-        localMatrix1.SetTRS(Vector3.zero, Quaternion.Euler(m_parentRotation), Vector3.one);
-        localMatrix2.SetTRS(Vector3.zero, Quaternion.Euler(m_referenceRotation), Vector3.one);
-
-        Vector4 childPin = localMatrix0.GetColumn(0);
-        Vector4 parentPin = localMatrix1.GetColumn(0);
-        Vector4 referencePin = localMatrix2.GetColumn(0);
+        var childPinNorm = m_Pin.normalized;
+        var parentPinNorm = m_ParentPin.normalized;
+        var refPinNorm = m_ReferencePin.normalized;
 
         NewtonBody child = GetComponent<NewtonBody>();
-        IntPtr otherBody = (m_otherBody != null) ? m_otherBody.GetBody().GetBody() : new IntPtr(0);
-        IntPtr referenceBody = (m_referenceBody != null) ? m_referenceBody.GetBody().GetBody() : new IntPtr(0);
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+        IntPtr referenceBody = (m_ReferenceBody != null) ? m_ReferenceBody.GetBody().GetBody() : new IntPtr(0);
 
-        dVector dChildPin = new dVector(childPin.x, childPin.y, childPin.z, 0.0f);
-        dVector dParentPin = new dVector(parentPin.x, parentPin.y, parentPin.z, 0.0f);
-        dVector dReferencePin = new dVector(referencePin.x, referencePin.y, referencePin.z, 0.0f);
+        dVector dChildPin = new dVector(childPinNorm.x, childPinNorm.y, childPinNorm.z, 0.0f);
+        dVector dParentPin = new dVector(parentPinNorm.x, parentPinNorm.y, parentPinNorm.z, 0.0f);
+        dVector dReferencePin = new dVector(refPinNorm.x, refPinNorm.y, refPinNorm.z, 0.0f);
 
-        m_joint = new dNewtonJointDifferentialGear(m_gearRatio, dChildPin, dParentPin, dReferencePin, child.GetBody().GetBody(), otherBody, referenceBody);
+        m_Joint = new dNewtonJointDifferentialGear(m_GearRatio, dChildPin, dParentPin, dReferencePin, child.GetBody().GetBody(), otherBody, referenceBody);
     }
 
     void OnDrawGizmosSelected()
     {
-        Matrix4x4 bodyMatrix0 = Matrix4x4.identity;
-        Matrix4x4 localMatrix0 = Matrix4x4.identity;
-        bodyMatrix0.SetTRS(transform.position, transform.rotation, Vector3.one);
-        localMatrix0.SetTRS(Vector3.zero, Quaternion.Euler(m_rotation), Vector3.one);
-
         Gizmos.color = Color.cyan;
-        Gizmos.matrix = bodyMatrix0;
-        Gizmos.DrawRay(Vector3.zero, localMatrix0.GetColumn(0) * m_gizmoScale);
-        if (m_otherBody != null)
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawRay(Vector3.zero, m_Pin.normalized * m_GizmoScale);
+        if (m_OtherBody != null)
         {
-            Matrix4x4 bodyMatrix1 = Matrix4x4.identity;
-            Matrix4x4 localMatrix1 = Matrix4x4.identity;
-            bodyMatrix1.SetTRS(m_otherBody.transform.position, m_otherBody.transform.rotation, Vector3.one);
-            localMatrix1.SetTRS(Vector3.zero, Quaternion.Euler(m_parentRotation), Vector3.one);
-
             Gizmos.color = Color.cyan;
-            Gizmos.matrix = bodyMatrix1;
-            Gizmos.DrawRay(Vector3.zero, localMatrix1.GetColumn(0) * m_gizmoScale);
+            Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+            Gizmos.DrawRay(Vector3.zero, m_ParentPin.normalized * m_GizmoScale);
         }
 
-        if (m_referenceBody != null)
+        if (m_ReferenceBody != null)
         {
-            Matrix4x4 bodyMatrix2 = Matrix4x4.identity;
-            Matrix4x4 localMatrix2 = Matrix4x4.identity;
-            bodyMatrix2.SetTRS(m_referenceBody.transform.position, m_referenceBody.transform.rotation, Vector3.one);
-            localMatrix2.SetTRS(Vector3.zero, Quaternion.Euler(m_referenceRotation), Vector3.one);
-
             Gizmos.color = Color.yellow;
-            Gizmos.matrix = bodyMatrix2;
-            Gizmos.DrawRay(Vector3.zero, localMatrix2.GetColumn(0) * m_gizmoScale);
+            Gizmos.matrix = m_ReferenceBody.transform.localToWorldMatrix;
+            Gizmos.DrawRay(Vector3.zero, m_ReferencePin.normalized * m_GizmoScale);
         }
     }
 
-    public NewtonBody m_referenceBody = null;
-    public Vector3 m_rotation = Vector3.zero;
-    public Vector3 m_parentRotation = Vector3.zero;
-    public Vector3 m_referenceRotation = Vector3.zero;
-    public float m_gearRatio = 1.0f;
+    [SerializeField]
+    private NewtonBody m_ReferenceBody = null;
+    [SerializeField]
+    private Vector3 m_Pin = Vector3.right;
+    [SerializeField]
+    private Vector3 m_ParentPin = Vector3.right;
+    [SerializeField]
+    private Vector3 m_ReferencePin = Vector3.right;
+    [SerializeField]
+    private float m_GearRatio = 1.0f;
+}
+
+[AddComponentMenu("Newton Physics/Joints/GearAndSlide")]
+public class NewtonGearAndSlide : NewtonJoint {
+    public override void InitJoint() {
+        NewtonBody child = GetComponent<NewtonBody>();
+        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+
+        var gearPinNorm = m_GearPin.normalized;
+        var slidePinNorm = m_SlidePin.normalized;
+
+        dVector childPin = new dVector(gearPinNorm.x, gearPinNorm.y, gearPinNorm.z, 0.0f);
+        dVector parentPin = new dVector(slidePinNorm.x, slidePinNorm.y, slidePinNorm.z, 0.0f);
+        m_Joint = new dNewtonJointGearAndSlide(m_gearRatio, m_SlideRatio, childPin, parentPin, child.GetBody().GetBody(), otherBody);
+    }
+
+    void OnDrawGizmosSelected() {
+        Gizmos.color = Color.cyan;
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawRay(Vector3.zero, m_GearPin.normalized*m_GizmoScale);
+        if (m_OtherBody != null) {
+            Gizmos.color = Color.cyan;
+            Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+            Gizmos.DrawRay(Vector3.zero, m_SlidePin.normalized * m_GizmoScale);
+        }
+    }
+
+    [SerializeField]
+    private Vector3 m_GearPin = Vector3.right;
+    [SerializeField]
+    private Vector3 m_SlidePin = Vector3.right;
+    [SerializeField]
+    private float m_gearRatio = 1.0f;
+    [SerializeField]
+    private float m_SlideRatio = 1.0f;
 }
 
