@@ -38,7 +38,7 @@ public class RopeComponent : MonoBehaviour
         }
 
         lineRenderer = transform.gameObject.AddComponent<LineRenderer>();
-        lineRenderer.numPositions = Segments;
+        lineRenderer.positionCount = Segments;
         lineRenderer.widthMultiplier = SegmentSize;
         lineRenderer.sharedMaterial = material;
 
