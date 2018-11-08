@@ -22,87 +22,82 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
+namespace Newton {
 
-[DisallowMultipleComponent]
-class NewtonWheelCollider: NewtonChamferedCylinderCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision shape = base.Create(world);
-        m_scale.y = 1.0f;
-        return shape;
+    [DisallowMultipleComponent]
+    class NewtonWheelCollider : NewtonChamferedCylinderCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision shape = base.Create(world);
+            m_scale.y = 1.0f;
+            return shape;
+        }
     }
-}
 
-[DisallowMultipleComponent]
-[RequireComponent(typeof(NewtonWheelCollider))]
-[AddComponentMenu("Newton Physics/Vehicle/Rigid Body Wheel")]
-class NewtonBodyWheel: NewtonBody
-{
-    void Start()
-    {
-        m_isScene = false;
-        m_shape = GetComponent<NewtonWheelCollider>();
-        m_shape.m_scale= new Vector3(1.0f, 1.0f, 1.0f);
-    }
-    /*
-        protected override void CreateBodyAndCollision()
-        {
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(NewtonWheelCollider))]
+    [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Wheel")]
+    class NewtonBodyWheel : NewtonBody {
+        void Start() {
+            m_isScene = false;
+            m_shape = GetComponent<NewtonWheelCollider>();
+            m_shape.m_scale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
+        /*
+            protected override void CreateBodyAndCollision()
+            {
+                Debug.Log("create actual wheel");
+                m_collision = new NewtonBodyCollision(this);
+                m_body = new dNewtonDynamicBody(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+            }
+        */
+        public void CreateTire() {
             Debug.Log("create actual wheel");
-            m_collision = new NewtonBodyCollision(this);
-            m_body = new dNewtonDynamicBody(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+
+            var handle = GCHandle.Alloc(this);
+
+            dTireData data = new dTireData();
+            //data.m_owner = GCHandle.ToIntPtr(handle);
+            m_wheel = new dNewtonWheel((dNewtonVehicle)m_owner.m_body, data);
         }
-    */
-    public void CreateTire()
-    {
-        Debug.Log("create actual wheel");
 
-        var handle = GCHandle.Alloc(this);
+        public void DestroyTire() {
+            Debug.Log("destroy actual wheel");
+            //var handle = GCHandle.FromIntPtr(m_wheel.GetUserData());
+            //handle.Free();
 
-        dTireData data = new dTireData();
-        //data.m_owner = GCHandle.ToIntPtr(handle);
-        m_wheel = new dNewtonWheel((dNewtonVehicle) m_owner.m_body, data);
-    }
-
-    public void DestroyTire()
-    {
-        Debug.Log("destroy actual wheel");
-        //var handle = GCHandle.FromIntPtr(m_wheel.GetUserData());
-        //handle.Free();
-
-        m_wheel.Dispose();
-        m_wheel = null;
-    }
-
-    public override void InitRigidBody()
-    {
-        if (m_owner == null)
-        {
-            // if the tire is not attached to a vehicle the this is simple rigid body 
-            base.InitRigidBody();
+            m_wheel.Dispose();
+            m_wheel = null;
         }
-    }
 
-    [Header ("wheel data")]
-    public NewtonBodyVehicle m_owner = null;
-    public float m_pivotOffset = 0.0f;
-    [Range(0.0f, 45.0f)]
-    public float m_maxSteeringAngle = 20.0f;
-    public float m_suspesionDamping = 1000.0f;
-    public float m_suspesionSpring = 100.0f;
-    public float m_suspesionlenght = 0.3f;
-    [Range(0.0f, 1.0f)]
-    public float m_lateralStiffness = 0.5f;
-    [Range(0.0f, 1.0f)]
-    public float m_longitudialStiffness = 0.5f;
-    [Range(0.0f, 1.0f)]
-    public float m_aligningMomentTrail = 0.5f;
-    [Range(0, 2)]
-    public int m_suspentionType = 1;
-    public bool m_hasFender = false;
-    //void* m_userData;
-    NewtonWheelCollider m_shape = null;
-    dNewtonWheel m_wheel = null;
+        public override void InitRigidBody() {
+            if (m_owner == null) {
+                // if the tire is not attached to a vehicle the this is simple rigid body 
+                base.InitRigidBody();
+            }
+        }
+
+        [Header("wheel data")]
+        public NewtonBodyVehicle m_owner = null;
+        public float m_pivotOffset = 0.0f;
+        [Range(0.0f, 45.0f)]
+        public float m_maxSteeringAngle = 20.0f;
+        public float m_suspesionDamping = 1000.0f;
+        public float m_suspesionSpring = 100.0f;
+        public float m_suspesionlenght = 0.3f;
+        [Range(0.0f, 1.0f)]
+        public float m_lateralStiffness = 0.5f;
+        [Range(0.0f, 1.0f)]
+        public float m_longitudialStiffness = 0.5f;
+        [Range(0.0f, 1.0f)]
+        public float m_aligningMomentTrail = 0.5f;
+        [Range(0, 2)]
+        public int m_suspentionType = 1;
+        public bool m_hasFender = false;
+        //void* m_userData;
+        NewtonWheelCollider m_shape = null;
+        dNewtonWheel m_wheel = null;
+    }
 }
 

@@ -20,47 +20,43 @@
 
 using System;
 using UnityEngine;
+using Newton.Internal;
 
-abstract public class NewtonJoint : MonoBehaviour
-{
-    abstract public void InitJoint();
-    
-    public float Stiffness
-    {
-        get
-        {
-            return m_Stiffness;
-        }
-        set
-        {
-            m_Stiffness = value;
-            if (m_Joint != null)
-            {
-                m_Joint.SetStiffness(m_Stiffness);
+namespace Newton {
+    abstract public class NewtonJoint : MonoBehaviour {
+        abstract public void InitJoint();
+
+        public float Stiffness {
+            get {
+                return m_Stiffness;
+            }
+            set {
+                m_Stiffness = value;
+                if (m_Joint != null) {
+                    m_Joint.SetStiffness(m_Stiffness);
+                }
             }
         }
+
+        void Start() {
+            InitJoint();
+        }
+
+        void OnDestroy() {
+            m_Joint.Destroy();
+        }
+
+        [SerializeField]
+        protected dNewtonJoint m_Joint = null;
+        [SerializeField]
+        protected NewtonBody m_OtherBody = null;
+        [SerializeField]
+        protected float m_Stiffness = 1.0f;
+        [SerializeField]
+        protected float m_GizmoScale = 1.0f;
+
+        protected bool m_Initialized = false;
     }
-
-    void Start()
-    {
-        InitJoint();
-    }
-
-    void OnDestroy()
-    {
-        m_Joint.Destroy();
-    }
-
-    [SerializeField]
-    protected dNewtonJoint m_Joint = null;
-    [SerializeField]
-    protected NewtonBody m_OtherBody = null;
-    [SerializeField]
-    protected float m_Stiffness = 1.0f;
-    [SerializeField]
-    protected float m_GizmoScale = 1.0f;
-
-    protected bool m_Initialized = false;
 }
 
 

@@ -21,25 +21,25 @@
 using System;
 using UnityEngine;
 
-public class Utils
-{
-    static public dMatrix ToMatrix(Vector3 posit, Quaternion rotation)
-    {
-        dMatrix matrix = new dMatrix();
-        Matrix4x4 entMatrix = Matrix4x4.identity;
-        entMatrix.SetTRS(posit, rotation, Vector3.one);
-        matrix.m_front = new dVector(entMatrix.m00, entMatrix.m10, entMatrix.m20, entMatrix.m30);
-        matrix.m_up =    new dVector(entMatrix.m01, entMatrix.m11, entMatrix.m21, entMatrix.m31);
-        matrix.m_right = new dVector(entMatrix.m02, entMatrix.m12, entMatrix.m22, entMatrix.m32);
-        matrix.m_posit = new dVector(entMatrix.m03, entMatrix.m13, entMatrix.m23, entMatrix.m33);
-        return matrix;
-    }
+using Newton.Internal;
+
+namespace Newton {
+    public class Utils {
+        static public dMatrix ToMatrix(Vector3 posit, Quaternion rotation) {
+            dMatrix matrix = new dMatrix();
+            Matrix4x4 entMatrix = Matrix4x4.identity;
+            entMatrix.SetTRS(posit, rotation, Vector3.one);
+            matrix.m_front = new dVector(entMatrix.m00, entMatrix.m10, entMatrix.m20, entMatrix.m30);
+            matrix.m_up = new dVector(entMatrix.m01, entMatrix.m11, entMatrix.m21, entMatrix.m31);
+            matrix.m_right = new dVector(entMatrix.m02, entMatrix.m12, entMatrix.m22, entMatrix.m32);
+            matrix.m_posit = new dVector(entMatrix.m03, entMatrix.m13, entMatrix.m23, entMatrix.m33);
+            return matrix;
+        }
 
 
-    static public int dRand(int seed, int oldSeed)
-    {
-        return oldSeed + seed * 31415821;
+        static public int dRand(int seed, int oldSeed) {
+            return oldSeed + seed * 31415821;
+        }
     }
 }
-
 

@@ -21,18 +21,19 @@
 using UnityEngine;
 using System;
 
+using Newton.Internal;
 
-[AddComponentMenu("Newton Physics/Colliders/Sphere")]
-public class NewtonSphereCollider : NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision collider = new dNewtonCollisionSphere(world.GetWorld(), m_radius);
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+namespace Newton {
+    [AddComponentMenu("Newton Physics/Colliders/Sphere")]
+    public class NewtonSphereCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision collider = new dNewtonCollisionSphere(world.GetWorld(), m_radius);
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
+
+        public float m_radius = 0.5f;
     }
-
-    public float m_radius = 0.5f;
 }
 

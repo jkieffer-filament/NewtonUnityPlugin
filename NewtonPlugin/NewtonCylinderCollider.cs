@@ -20,21 +20,22 @@
 
 using UnityEngine;
 using System;
+using Newton.Internal;
 
+namespace Newton {
 
-[AddComponentMenu("Newton Physics/Colliders/Cylinder")]
-public class NewtonCylinderCollider : NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision collider = new dNewtonCollisionCylinder(world.GetWorld(), m_radius0, m_radius1, m_height);
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+    [AddComponentMenu("Newton Physics/Colliders/Cylinder")]
+    public class NewtonCylinderCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision collider = new dNewtonCollisionCylinder(world.GetWorld(), m_radius0, m_radius1, m_height);
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
+
+        public float m_radius0 = 0.5f;
+        public float m_radius1 = 0.5f;
+        public float m_height = 2.0f;
     }
-
-    public float m_radius0 = 0.5f;
-    public float m_radius1 = 0.5f;
-    public float m_height = 2.0f;
 }
 

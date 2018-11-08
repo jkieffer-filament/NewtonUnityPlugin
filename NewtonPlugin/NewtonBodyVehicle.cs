@@ -22,56 +22,50 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
-[DisallowMultipleComponent]
-[AddComponentMenu("Newton Physics/Vehicle/Rigid Body Vehicle")]
-class NewtonBodyVehicle: NewtonBody
-{
-    void Start()
-    {
-        m_isScene = false;
-    }
+namespace Newton {
+    [DisallowMultipleComponent]
+    [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Vehicle")]
+    class NewtonBodyVehicle : NewtonBody {
+        void Start() {
+            m_isScene = false;
+        }
 
-    public override void OnDestroy()
-    {
-        Debug.Log("destroy vehicle");
+        public override void OnDestroy() {
+            Debug.Log("destroy vehicle");
 
-        foreach (NewtonBodyWheel wheel in m_wheels)
-        {
-            if ((wheel != null) && (wheel.m_owner == this))
-            {
-                wheel.DestroyTire();
+            foreach (NewtonBodyWheel wheel in m_wheels) {
+                if ((wheel != null) && (wheel.m_owner == this)) {
+                    wheel.DestroyTire();
+                }
+            }
+
+            base.OnDestroy();
+        }
+
+        protected override void CreateBodyAndCollision() {
+            Debug.Log("create actual vehicle");
+            m_collision = new NewtonBodyCollision(this);
+            m_body = new dNewtonVehicle(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+        }
+
+        public override void InitRigidBody() {
+            Debug.Log("init vehicle");
+            base.InitRigidBody();
+
+            // initialize all wheels
+            dNewtonVehicle vehicle = (dNewtonVehicle)m_body;
+
+            foreach (NewtonBodyWheel wheel in m_wheels) {
+                if ((wheel != null) && (wheel.m_owner == this)) {
+                    wheel.CreateTire();
+                }
             }
         }
 
-        base.OnDestroy();
+        [Header("vehicle chassis data")]
+        public NewtonBodyWheel[] m_wheels = null;
     }
-
-    protected override void CreateBodyAndCollision()
-    {
-        Debug.Log("create actual vehicle");
-        m_collision = new NewtonBodyCollision(this);
-        m_body = new dNewtonVehicle(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
-    }
-
-    public override void InitRigidBody()
-    {
-        Debug.Log("init vehicle");
-        base.InitRigidBody();
-
-        // initialize all wheels
-        dNewtonVehicle vehicle = (dNewtonVehicle)m_body;
-
-        foreach (NewtonBodyWheel wheel in m_wheels)
-        {
-            if ((wheel != null) && (wheel.m_owner == this))
-            {
-                wheel.CreateTire();
-            }
-        }
-    }
-
-    [Header("vehicle chassis data")]
-    public NewtonBodyWheel[] m_wheels = null;
 }
 

@@ -22,186 +22,159 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
+namespace Newton {
 
-public delegate void OnDrawFaceCallback(IntPtr points, int vertexCount);
+    public delegate void OnDrawFaceCallback(IntPtr points, int vertexCount);
 
-abstract public class NewtonCollider: MonoBehaviour
-{
-    abstract public dNewtonCollision Create(NewtonWorld world);
+    abstract public class NewtonCollider : MonoBehaviour {
+        abstract public dNewtonCollision Create(NewtonWorld world);
 
-    public void OnDrawFace(IntPtr vertexDataPtr, int vertexCount)
-    {
-        Marshal.Copy(vertexDataPtr, m_debugDisplayVertexBuffer, 0, vertexCount * 3);
-        int i0 = vertexCount - 1;
-        for (int i1 = 0; i1 < vertexCount; i1++)
-        {
-            m_lineP0.x = m_debugDisplayVertexBuffer[i0 * 3 + 0];
-            m_lineP0.y = m_debugDisplayVertexBuffer[i0 * 3 + 1];
-            m_lineP0.z = m_debugDisplayVertexBuffer[i0 * 3 + 2];
-            m_lineP1.x = m_debugDisplayVertexBuffer[i1 * 3 + 0];
-            m_lineP1.y = m_debugDisplayVertexBuffer[i1 * 3 + 1];
-            m_lineP1.z = m_debugDisplayVertexBuffer[i1 * 3 + 2];
-            Gizmos.DrawLine(m_lineP0, m_lineP1);
-            i0 = i1;
+        public void OnDrawFace(IntPtr vertexDataPtr, int vertexCount) {
+            Marshal.Copy(vertexDataPtr, m_debugDisplayVertexBuffer, 0, vertexCount * 3);
+            int i0 = vertexCount - 1;
+            for (int i1 = 0; i1 < vertexCount; i1++) {
+                m_lineP0.x = m_debugDisplayVertexBuffer[i0 * 3 + 0];
+                m_lineP0.y = m_debugDisplayVertexBuffer[i0 * 3 + 1];
+                m_lineP0.z = m_debugDisplayVertexBuffer[i0 * 3 + 2];
+                m_lineP1.x = m_debugDisplayVertexBuffer[i1 * 3 + 0];
+                m_lineP1.y = m_debugDisplayVertexBuffer[i1 * 3 + 1];
+                m_lineP1.z = m_debugDisplayVertexBuffer[i1 * 3 + 2];
+                Gizmos.DrawLine(m_lineP0, m_lineP1);
+                i0 = i1;
+            }
         }
-    }
 
-    public virtual  void OnDrawGizmosSelected()
-    {
-        if (m_showGizmo)
-        {
+        public virtual void OnDrawGizmosSelected() {
+            if (m_showGizmo) {
 
+                ValidateEditorShape();
+                if (m_editorShape != null) {
+                    UpdateParams(m_editorShape);
+
+                    Transform bodyTransform = transform;
+                    while ((bodyTransform != null) && (bodyTransform.gameObject.GetComponent<NewtonBody>() == null)) {
+                        bodyTransform = bodyTransform.parent;
+                    }
+
+                    if (bodyTransform != null) {
+                        Gizmos.matrix = Matrix4x4.TRS(bodyTransform.position, bodyTransform.rotation, Vector3.one);
+                        Gizmos.color = Color.yellow;
+
+                        Camera camera = Camera.current;
+                        Matrix4x4 matrix = Matrix4x4.Inverse(camera.worldToCameraMatrix * Gizmos.matrix);
+                        Vector4 eyepoint = matrix.GetColumn(3);
+                        m_editorShape.DebugRender(OnDrawFace, new dVector(eyepoint.x, eyepoint.y, eyepoint.z));
+                    }
+                }
+            }
+        }
+
+        public void SetMaterial(dNewtonCollision shape) {
+            int materialID = m_material ? m_material.GetInstanceID() : 0;
+            shape.SetMaterialID(materialID);
+            shape.SetAsTrigger(m_isTrigger);
+        }
+
+        public void SetLayer(dNewtonCollision shape) {
+            shape.SetLayer(m_layer);
+        }
+
+        public virtual bool IsStatic() {
+            return false;
+        }
+
+        public virtual Vector3 GetScale() {
+            Vector3 scale = m_scale;
+            if (m_inheritTransformScale) {
+                //scale.x *= transform.localScale.x;
+                //scale.y *= transform.localScale.y;
+                //scale.z *= transform.localScale.z;
+                scale.x *= transform.lossyScale.x;
+                scale.y *= transform.lossyScale.y;
+                scale.z *= transform.lossyScale.z;
+            }
+            return scale;
+        }
+
+        public void RecreateEditorShape() {
+            if (m_editorShape != null) {
+                m_editorShape.Dispose();
+                m_editorShape = null;
+                UpdateEditorParams();
+            }
+        }
+
+        public void UpdateEditorParams() {
             ValidateEditorShape();
-            if (m_editorShape != null)
-            {
+            if (m_editorShape != null) {
                 UpdateParams(m_editorShape);
+            }
+        }
 
-                Transform bodyTransform = transform;
-                while ((bodyTransform != null) && (bodyTransform.gameObject.GetComponent<NewtonBody>() == null))
-                {
+        public dNewtonCollision CreateBodyShape(NewtonWorld world) {
+            dNewtonCollision shape = Create(world);
+            if (shape != null) {
+                UpdateParams(shape);
+            }
+            return shape;
+        }
+
+        // these are all privates 
+        private void UpdateParams(dNewtonCollision shape) {
+            Vector3 scale = GetScale();
+            shape.SetScale(scale.x, scale.y, scale.z);
+
+            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            if (transform.gameObject.GetComponent<NewtonBody>() == null) {
+                matrix = matrix.matrixMultiply(Utils.ToMatrix(transform.position, transform.rotation));
+                Transform bodyTransform = transform.parent;
+                while ((bodyTransform != null) && (bodyTransform.gameObject.GetComponent<NewtonBody>() == null)) {
                     bodyTransform = bodyTransform.parent;
                 }
-           
-                if (bodyTransform != null)
-                {
-                    Gizmos.matrix = Matrix4x4.TRS(bodyTransform.position, bodyTransform.rotation, Vector3.one);
-                    Gizmos.color = Color.yellow;
 
-                    Camera camera = Camera.current;
-                    Matrix4x4 matrix = Matrix4x4.Inverse(camera.worldToCameraMatrix * Gizmos.matrix);
-                    Vector4 eyepoint = matrix.GetColumn(3);
-                    m_editorShape.DebugRender(OnDrawFace, new dVector(eyepoint.x, eyepoint.y, eyepoint.z));
+                if (bodyTransform != null) {
+                    dMatrix bodyMatrix = Utils.ToMatrix(bodyTransform.position, bodyTransform.rotation);
+                    matrix = matrix.matrixMultiply(bodyMatrix.Inverse());
+                }
+            }
+            shape.SetMatrix(matrix);
+        }
+
+        private void ValidateEditorShape() {
+            if (m_editorShape == null) {
+                NewtonBody body = null;
+                Transform gameTransform = transform;
+                while (gameTransform != null) {
+                    // this is a child body we need to find the root rigid body owning the shape
+                    if (body == null) {
+                        body = gameTransform.gameObject.GetComponent<NewtonBody>();
+                    }
+                    gameTransform = gameTransform.parent;
+                }
+
+                if (body != null) {
+                    if (body.m_world != null) {
+                        m_editorShape = Create(body.m_world);
+                    }
                 }
             }
         }
+
+        private dNewtonCollision m_editorShape = null;
+        public NewtonMaterial m_material = null;
+        public LayerMask m_layer;
+        public Vector3 m_posit = Vector3.zero;
+        public Vector3 m_rotation = Vector3.zero;
+        public Vector3 m_scale = Vector3.one;
+        public bool m_isTrigger = false;
+        public bool m_showGizmo = true;
+        public bool m_inheritTransformScale = true;
+
+        // Reuse the same buffer for debug display
+        static Vector3 m_lineP0 = Vector3.zero;
+        static Vector3 m_lineP1 = Vector3.zero;
+        static float[] m_debugDisplayVertexBuffer = new float[64 * 3];
     }
-
-    public void SetMaterial(dNewtonCollision shape)
-    {
-        int materialID = m_material ? m_material.GetInstanceID() : 0;
-        shape.SetMaterialID(materialID);
-        shape.SetAsTrigger(m_isTrigger);
-    }
-
-    public void SetLayer(dNewtonCollision shape)
-    {
-        shape.SetLayer(m_layer);
-    }
-
-    public virtual bool IsStatic()
-    {
-        return false;
-    }
-
-    public virtual  Vector3 GetScale()
-    {
-        Vector3 scale = m_scale;
-        if (m_inheritTransformScale)
-        {
-            //scale.x *= transform.localScale.x;
-            //scale.y *= transform.localScale.y;
-            //scale.z *= transform.localScale.z;
-            scale.x *= transform.lossyScale.x;
-            scale.y *= transform.lossyScale.y;
-            scale.z *= transform.lossyScale.z;
-        }
-        return scale;
-    }
-    
-    public void RecreateEditorShape()
-    {
-        if (m_editorShape != null)
-        {
-            m_editorShape.Dispose();
-            m_editorShape = null;
-            UpdateEditorParams();
-        }
-    }
-
-    public void UpdateEditorParams()
-    {
-        ValidateEditorShape();
-        if (m_editorShape != null)
-        {
-            UpdateParams(m_editorShape);
-        }
-    }
-
-    public dNewtonCollision CreateBodyShape(NewtonWorld world)
-    {
-        dNewtonCollision shape = Create(world);
-        if (shape != null)
-        {
-            UpdateParams(shape);
-        }
-        return shape;
-    }
-
-    // these are all privates 
-    private void UpdateParams(dNewtonCollision shape)
-    {
-        Vector3 scale = GetScale();
-        shape.SetScale(scale.x, scale.y, scale.z);
-
-        dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        if (transform.gameObject.GetComponent<NewtonBody>() == null)
-        {
-            matrix = matrix.matrixMultiply(Utils.ToMatrix(transform.position, transform.rotation));
-            Transform bodyTransform = transform.parent;
-            while ((bodyTransform != null) && (bodyTransform.gameObject.GetComponent<NewtonBody>() == null))
-            {
-                bodyTransform = bodyTransform.parent;
-            }
-
-            if (bodyTransform != null)
-            {
-                dMatrix bodyMatrix = Utils.ToMatrix(bodyTransform.position, bodyTransform.rotation);
-                matrix = matrix.matrixMultiply(bodyMatrix.Inverse());
-            }
-        }
-        shape.SetMatrix(matrix);
-    }
-
-    private void ValidateEditorShape()
-    {
-        if (m_editorShape == null)
-        {
-            NewtonBody body = null;
-            Transform gameTransform = transform;
-            while (gameTransform != null)
-            {
-                // this is a child body we need to find the root rigid body owning the shape
-                if (body == null)
-                {
-                     body = gameTransform.gameObject.GetComponent<NewtonBody>();
-                }
-                gameTransform = gameTransform.parent;
-            }
-
-            if (body != null)
-            {
-                if (body.m_world != null)
-                {
-                    m_editorShape = Create(body.m_world);
-                }
-            }
-        }
-    }
-
-    private dNewtonCollision m_editorShape = null;
-    public NewtonMaterial m_material = null;
-    public LayerMask m_layer;
-    public Vector3 m_posit = Vector3.zero;
-    public Vector3 m_rotation = Vector3.zero;
-    public Vector3 m_scale = Vector3.one;
-    public bool m_isTrigger = false;
-    public bool m_showGizmo = true;
-    public bool m_inheritTransformScale = true;
-
-    // Reuse the same buffer for debug display
-    static Vector3 m_lineP0 = Vector3.zero;
-    static Vector3 m_lineP1 = Vector3.zero;
-    static float[] m_debugDisplayVertexBuffer = new float[64 * 3];
 }
-

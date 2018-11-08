@@ -20,11 +20,12 @@
 
 using UnityEngine;
 using System;
+using Newton.Internal;
 
-public class NewtonNullCollider: NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        return new dNewtonCollisionNull(world.GetWorld());
+namespace Newton {
+    public class NewtonNullCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            return new dNewtonCollisionNull(world.GetWorld());
+        }
     }
 }

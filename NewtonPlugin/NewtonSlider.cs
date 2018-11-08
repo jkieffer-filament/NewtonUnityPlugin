@@ -21,316 +21,262 @@
 using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
+namespace Newton {
 
-[AddComponentMenu("Newton Physics/Joints/Slider")]
-public class NewtonSlider: NewtonJoint
-{
-    public override void InitJoint()
-    {
-        NewtonBody child = GetComponent<NewtonBody>();
-        dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
-        m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
+    [AddComponentMenu("Newton Physics/Joints/Slider")]
+    public class NewtonSlider : NewtonJoint {
+        public override void InitJoint() {
+            NewtonBody child = GetComponent<NewtonBody>();
+            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
 
-        Stiffness = m_Stiffness;
-        EnableLimits = m_enableLimits;
-        SetSpringDamper = m_setSpringDamper;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Matrix4x4 bodyMatrix = Matrix4x4.identity;
-        Matrix4x4 localMatrix = Matrix4x4.identity;
-        bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-        localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
-
-        Gizmos.color = Color.red;
-
-        Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
-        if (m_enableLimits)
-        {
-            // draw hinge limit
+            Stiffness = m_Stiffness;
+            EnableLimits = m_enableLimits;
+            SetSpringDamper = m_setSpringDamper;
         }
-    }
 
-    public bool EnableLimits
-    {
-        get
-        {
-            return m_enableLimits;
-        }
-        set
-        {
-            m_enableLimits = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+        void OnDrawGizmosSelected() {
+            Matrix4x4 bodyMatrix = Matrix4x4.identity;
+            Matrix4x4 localMatrix = Matrix4x4.identity;
+            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
+
+            Gizmos.color = Color.red;
+
+            Gizmos.matrix = bodyMatrix;
+            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+            if (m_enableLimits) {
+                // draw hinge limit
             }
         }
-    }
 
-    public float MinimumLimit
-    {
-        get
-        {
-            return m_minLimit;
-        }
-        set
-        {
-            m_minLimit = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+        public bool EnableLimits {
+            get {
+                return m_enableLimits;
+            }
+            set {
+                m_enableLimits = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                }
             }
         }
-    }
 
-    public float MaximunLimit
-    {
-        get
-        {
-            return m_maxLimit;
-        }
-        set
-        {
-            m_maxLimit = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+        public float MinimumLimit {
+            get {
+                return m_minLimit;
+            }
+            set {
+                m_minLimit = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                }
             }
         }
-    }
 
-    public bool SetSpringDamper
-    {
-        get
-        {
-            return m_setSpringDamper;
-        }
-        set
-        {
-            m_setSpringDamper = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+        public float MaximunLimit {
+            get {
+                return m_maxLimit;
+            }
+            set {
+                m_maxLimit = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                }
             }
         }
-    }
 
-    public float SpringDamperForceMixing
-    {
-        get
-        {
-            return m_springDamperForceMixing;
-        }
-        set
-        {
-            m_springDamperForceMixing = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+        public bool SetSpringDamper {
+            get {
+                return m_setSpringDamper;
+            }
+            set {
+                m_setSpringDamper = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                }
             }
         }
-    }
 
-    public float SpringConstant
-    {
-        get
-        {
-            return m_springConstant;
-        }
-        set
-        {
-            m_springConstant = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+        public float SpringDamperForceMixing {
+            get {
+                return m_springDamperForceMixing;
+            }
+            set {
+                m_springDamperForceMixing = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                }
             }
         }
-    }
 
-    public float DamperConstant
-    {
-        get
-        {
-            return m_damperConstant;
-        }
-        set
-        {
-            m_damperConstant = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+        public float SpringConstant {
+            get {
+                return m_springConstant;
+            }
+            set {
+                m_springConstant = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                }
             }
         }
-    }
 
-    public Vector3 m_posit = Vector3.zero;
-    public Vector3 m_rotation = Vector3.zero;
-    public bool m_enableLimits = false;
-    public float m_minLimit = -1.0f;
-    public float m_maxLimit =  1.0f;
-    public bool m_setSpringDamper = false;
-    public float m_springDamperForceMixing = 0.9f;
-    public float m_springConstant = 0.0f;
-    public float m_damperConstant = 10.0f;
-}
-
-
-[AddComponentMenu("Newton Physics/Joints/Slider Actuator")]
-public class NewtonSliderActuator : NewtonJoint
-{
-    public override void InitJoint()
-    {
-        NewtonBody child = GetComponent<NewtonBody>();
-        dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
-        m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
-
-        Speed = m_speed;
-        MaxForce = m_maxForce;
-        TargetPosition = m_targetPosition;
-    }
-    
-    void OnDrawGizmosSelected()
-    {
-        Matrix4x4 bodyMatrix = Matrix4x4.identity;
-        Matrix4x4 localMatrix = Matrix4x4.identity;
-        bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-        localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
-
-        Gizmos.color = Color.red;
-
-        Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
-    }
-
-
-    public float MaxForce
-    {
-        get
-        {
-            return m_maxForce;
+        public float DamperConstant {
+            get {
+                return m_damperConstant;
+            }
+            set {
+                m_damperConstant = value;
+                if (m_Joint != null) {
+                    dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
+                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                }
+            }
         }
-        set
-        {
-            m_maxForce = value;
-            if (m_Joint != null)
-            {
+
+        public Vector3 m_posit = Vector3.zero;
+        public Vector3 m_rotation = Vector3.zero;
+        public bool m_enableLimits = false;
+        public float m_minLimit = -1.0f;
+        public float m_maxLimit = 1.0f;
+        public bool m_setSpringDamper = false;
+        public float m_springDamperForceMixing = 0.9f;
+        public float m_springConstant = 0.0f;
+        public float m_damperConstant = 10.0f;
+    }
+
+
+    [AddComponentMenu("Newton Physics/Joints/Slider Actuator")]
+    public class NewtonSliderActuator : NewtonJoint {
+        public override void InitJoint() {
+            NewtonBody child = GetComponent<NewtonBody>();
+            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
+
+            Speed = m_speed;
+            MaxForce = m_maxForce;
+            TargetPosition = m_targetPosition;
+        }
+
+        void OnDrawGizmosSelected() {
+            Matrix4x4 bodyMatrix = Matrix4x4.identity;
+            Matrix4x4 localMatrix = Matrix4x4.identity;
+            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
+
+            Gizmos.color = Color.red;
+
+            Gizmos.matrix = bodyMatrix;
+            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+        }
+
+
+        public float MaxForce {
+            get {
+                return m_maxForce;
+            }
+            set {
+                m_maxForce = value;
+                if (m_Joint != null) {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
+                    joint.SetMaxForce(m_maxForce);
+                }
+            }
+        }
+
+        public float Speed {
+            get {
+                return m_speed;
+            }
+            set {
+                m_speed = value;
+                if (m_Joint != null) {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
+                    joint.SetSpeed(m_speed);
+                }
+            }
+        }
+
+        public float TargetPosition {
+            get {
+                return m_targetPosition;
+            }
+            set {
+                m_targetPosition = value;
+                if (m_Joint != null) {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
+                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                }
+            }
+        }
+
+        public float MinimumPosition {
+            get {
+                return m_minPosition;
+            }
+            set {
+                m_minPosition = value;
+                if (m_Joint != null) {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
+                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                }
+            }
+        }
+
+        public float MaximumPosition {
+            get {
+                return m_maxPosition;
+            }
+            set {
+                m_maxPosition = value;
+                if (m_Joint != null) {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
+                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                }
+            }
+        }
+
+        public float GetPosition() {
+            float position = 0.0f;
+            if (m_Joint != null) {
                 dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                joint.SetMaxForce(m_maxForce);
+                position = joint.GetPosition();
             }
+            return position;
         }
-    }
 
-    public float Speed
-    {
-        get
-        {
-            return m_speed;
-        }
-        set
-        {
-            m_speed = value;
-            if (m_Joint != null)
+        /*
+            public float GetJointSpeed()
             {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                joint.SetSpeed(m_speed);
+                float speed = 0.0f;
+                if (m_joint != null)
+                {
+                    dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
+                    speed = joint.GetSpeed();
+                }
+                return speed;
             }
-        }
-    }
+        */
 
-    public float TargetPosition
-    {
-        get
-        {
-            return m_targetPosition;
-        }
-        set
-        {
-            m_targetPosition = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
-            }
-        }
+        public Vector3 m_posit = Vector3.zero;
+        public Vector3 m_rotation = Vector3.zero;
+        public float m_maxForce = 10.0f;
+        public float m_speed = 1.0f;
+        public float m_targetPosition = 0.0f;
+        public float m_minPosition = -1.0f;
+        public float m_maxPosition = 1.0f;
     }
-
-    public float MinimumPosition
-    {
-        get
-        {
-            return m_minPosition;
-        }
-        set
-        {
-            m_minPosition = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
-            }
-        }
-    }
-
-    public float MaximumPosition
-    {
-        get
-        {
-            return m_maxPosition;
-        }
-        set
-        {
-            m_maxPosition = value;
-            if (m_Joint != null)
-            {
-                dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
-            }
-        }
-    }
-
-    public float GetPosition()
-    {
-        float position = 0.0f;
-        if (m_Joint != null)
-        {
-            dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-            position = joint.GetPosition();
-        }
-        return position;
-    }
-
-/*
-    public float GetJointSpeed()
-    {
-        float speed = 0.0f;
-        if (m_joint != null)
-        {
-            dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_joint;
-            speed = joint.GetSpeed();
-        }
-        return speed;
-    }
-*/
-    
-    public Vector3 m_posit = Vector3.zero;
-    public Vector3 m_rotation = Vector3.zero;
-    public float m_maxForce = 10.0f;
-    public float m_speed = 1.0f;
-    public float m_targetPosition = 0.0f;
-    public float m_minPosition = -1.0f;
-    public float m_maxPosition = 1.0f;
 }
 
 

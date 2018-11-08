@@ -21,38 +21,36 @@
 using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
+namespace Newton {
+    [AddComponentMenu("Newton Physics/Joints/BallAndSocket")]
+    public class NewtonBallAndSocket : NewtonJoint {
+        public override void InitJoint() {
+            NewtonBody child = GetComponent<NewtonBody>();
+            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            m_Joint = new dNewtonJointBallAndSocket(matrix, child.GetBody().GetBody(), otherBody);
 
-[AddComponentMenu("Newton Physics/Joints/BallAndSocket")]
-public class NewtonBallAndSocket: NewtonJoint
-{
-    public override void InitJoint()
-    {
-        NewtonBody child = GetComponent<NewtonBody>();
-        dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
-        IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
-        m_Joint = new dNewtonJointBallAndSocket(matrix, child.GetBody().GetBody(), otherBody);
+            Stiffness = m_Stiffness;
+        }
 
-        Stiffness = m_Stiffness;
+        void OnDrawGizmosSelected() {
+            Matrix4x4 bodyMatrix = Matrix4x4.identity;
+            Matrix4x4 localMatrix = Matrix4x4.identity;
+            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
+
+            Gizmos.color = Color.red;
+
+            Gizmos.matrix = bodyMatrix;
+            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+        }
+
+        public Vector3 m_posit = Vector3.zero;
+        public Vector3 m_rotation = Vector3.zero;
     }
-
-    void OnDrawGizmosSelected()
-    {
-        Matrix4x4 bodyMatrix = Matrix4x4.identity;
-        Matrix4x4 localMatrix = Matrix4x4.identity;
-        bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-        localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
-
-        Gizmos.color = Color.red;
-
-        Gizmos.matrix = bodyMatrix;
-        Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
-    }
-
-    public Vector3 m_posit = Vector3.zero;
-    public Vector3 m_rotation = Vector3.zero;
 }
-
 
 
 

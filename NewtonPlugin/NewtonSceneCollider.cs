@@ -19,15 +19,16 @@
 */
 using UnityEngine;
 using System;
+using Newton.Internal;
 
-class NewtonSceneCollider : NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollisionScene collider = new dNewtonCollisionScene(world.GetWorld());
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+namespace Newton {
+    class NewtonSceneCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollisionScene collider = new dNewtonCollisionScene(world.GetWorld());
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
     }
 }
 

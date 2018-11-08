@@ -22,158 +22,136 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newton.Internal;
 
-public class NewtonBodyCollision
-{
-    struct ColliderShapePair
-    {
-        public NewtonCollider m_collider;
-        public dNewtonCollision m_shape;
-    }
-
-    public NewtonBodyCollision(NewtonBody body)
-    {
-        if (body.m_world.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
-
-        List<ColliderShapePair> colliderList = new List<ColliderShapePair>();
-        TraverseColliders(body.gameObject, colliderList, body.gameObject, body);
-
-        if (body.m_isScene)
-        {
-            m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
-            NewtonSceneCollider sceneCollider = body.gameObject.AddComponent<NewtonSceneCollider>();
-            dNewtonCollisionScene sceneShape = (dNewtonCollisionScene)sceneCollider.Create(body.m_world);
-
-            m_collidersArray[0].m_shape = sceneShape;
-            m_collidersArray[0].m_collider = sceneCollider;
-
-            int index = 1;
-            sceneShape.BeginAddRemoveCollision();
-            foreach (ColliderShapePair pair in colliderList)
-            {
-                m_collidersArray[index] = pair;
-                sceneShape.AddCollision(pair.m_shape);
-                index++;
-            }
-            sceneShape.EndAddRemoveCollision();
+namespace Newton {
+    public class NewtonBodyCollision {
+        struct ColliderShapePair {
+            public NewtonCollider m_collider;
+            public dNewtonCollision m_shape;
         }
-        else if (colliderList.Count == 0)
-        {
-            m_collidersArray = new ColliderShapePair[1];
-            NewtonCollider collider = body.gameObject.AddComponent<NewtonNullCollider>();
-            m_collidersArray[0].m_collider = collider;
-            m_collidersArray[0].m_shape = collider.Create(body.m_world);
-        }
-        else if (colliderList.Count == 1)
-        {
-            m_collidersArray = new ColliderShapePair[1];
-            m_collidersArray[0] = colliderList[0];
-        }
-        else
-        {
-            m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
-            NewtonCompoundCollider compoundCollider = body.gameObject.AddComponent<NewtonCompoundCollider>();
-            dNewtonCollisionCompound compoundShape = (dNewtonCollisionCompound)compoundCollider.Create(body.m_world);
 
-            m_collidersArray[0].m_shape = compoundShape;
-            m_collidersArray[0].m_collider = compoundCollider;
+        public NewtonBodyCollision(NewtonBody body) {
+            if (body.m_world.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
 
-            int index = 1;
-            compoundShape.BeginAddRemoveCollision();
-            foreach (ColliderShapePair pair in colliderList)
-            {
-                m_collidersArray[index] = pair;
-                compoundShape.AddCollision(pair.m_shape);
-                index++;
-            }
-            compoundShape.EndAddRemoveCollision();
-        }
-    }
+            List<ColliderShapePair> colliderList = new List<ColliderShapePair>();
+            TraverseColliders(body.gameObject, colliderList, body.gameObject, body);
 
-    public void Destroy()
-    {
-        for (int i = 0; i < m_collidersArray.Length; i ++)
-        {
-            m_collidersArray[i].m_shape.Dispose();
-            m_collidersArray[i].m_shape = null;
-            m_collidersArray[i].m_collider = null;
-        }
-    }
+            if (body.m_isScene) {
+                m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
+                NewtonSceneCollider sceneCollider = body.gameObject.AddComponent<NewtonSceneCollider>();
+                dNewtonCollisionScene sceneShape = (dNewtonCollisionScene)sceneCollider.Create(body.m_world);
 
-    private void TraverseColliders(GameObject gameObject, List<ColliderShapePair> colliderList, GameObject rootObject, NewtonBody body)
-    {
-        // Don't fetch colliders from children with NewtonBodies
-        if ((gameObject == rootObject) || (gameObject.GetComponent<NewtonBody>() == null))
-        {
-            //Fetch all colliders
-            foreach (NewtonCollider collider in gameObject.GetComponents<NewtonCollider>())
-            {
-                dNewtonCollision shape = collider.CreateBodyShape(body.m_world);
-                if (shape != null)
-                {
-                    ColliderShapePair pair;
-                    pair.m_collider = collider;
-                    pair.m_shape = shape;
-                    colliderList.Add(pair);
+                m_collidersArray[0].m_shape = sceneShape;
+                m_collidersArray[0].m_collider = sceneCollider;
+
+                int index = 1;
+                sceneShape.BeginAddRemoveCollision();
+                foreach (ColliderShapePair pair in colliderList) {
+                    m_collidersArray[index] = pair;
+                    sceneShape.AddCollision(pair.m_shape);
+                    index++;
                 }
+                sceneShape.EndAddRemoveCollision();
+            } else if (colliderList.Count == 0) {
+                m_collidersArray = new ColliderShapePair[1];
+                NewtonCollider collider = body.gameObject.AddComponent<NewtonNullCollider>();
+                m_collidersArray[0].m_collider = collider;
+                m_collidersArray[0].m_shape = collider.Create(body.m_world);
+            } else if (colliderList.Count == 1) {
+                m_collidersArray = new ColliderShapePair[1];
+                m_collidersArray[0] = colliderList[0];
+            } else {
+                m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
+                NewtonCompoundCollider compoundCollider = body.gameObject.AddComponent<NewtonCompoundCollider>();
+                dNewtonCollisionCompound compoundShape = (dNewtonCollisionCompound)compoundCollider.Create(body.m_world);
+
+                m_collidersArray[0].m_shape = compoundShape;
+                m_collidersArray[0].m_collider = compoundCollider;
+
+                int index = 1;
+                compoundShape.BeginAddRemoveCollision();
+                foreach (ColliderShapePair pair in colliderList) {
+                    m_collidersArray[index] = pair;
+                    compoundShape.AddCollision(pair.m_shape);
+                    index++;
+                }
+                compoundShape.EndAddRemoveCollision();
             }
+        }
 
-            Terrain terrain = gameObject.GetComponent<Terrain>();
-            if (terrain)
-            {
-                NewtonHeighfieldCollider heighfield = gameObject.GetComponent<NewtonHeighfieldCollider>();
-                if (heighfield)
-                {
-                    TerrainData data = terrain.terrainData;
-                    
-                    int treesCount = data.treeInstanceCount;
-                    TreeInstance[] treeInstanceArray = data.treeInstances;
-                    TreePrototype[] treeProtoArray = data.treePrototypes;
+        public void Destroy() {
+            for (int i = 0; i < m_collidersArray.Length; i++) {
+                m_collidersArray[i].m_shape.Dispose();
+                m_collidersArray[i].m_shape = null;
+                m_collidersArray[i].m_collider = null;
+            }
+        }
 
-                    Vector3 posit = Vector3.zero;
-                    for (int i = 0; i < treesCount; i ++)
-                    {
-                        TreeInstance tree = treeInstanceArray[i];
-                        posit.x = tree.position.x * data.size.x;
-                        posit.y = tree.position.y * data.size.y;
-                        posit.z = tree.position.z * data.size.z;
+        private void TraverseColliders(GameObject gameObject, List<ColliderShapePair> colliderList, GameObject rootObject, NewtonBody body) {
+            // Don't fetch colliders from children with NewtonBodies
+            if ((gameObject == rootObject) || (gameObject.GetComponent<NewtonBody>() == null)) {
+                //Fetch all colliders
+                foreach (NewtonCollider collider in gameObject.GetComponents<NewtonCollider>()) {
+                    dNewtonCollision shape = collider.CreateBodyShape(body.m_world);
+                    if (shape != null) {
+                        ColliderShapePair pair;
+                        pair.m_collider = collider;
+                        pair.m_shape = shape;
+                        colliderList.Add(pair);
+                    }
+                }
 
-                        //Debug.Log("xxx0 " + posit);
-                        TreePrototype treeProto = treeProtoArray[tree.prototypeIndex];
-                        GameObject treeGameObject = treeProto.prefab;
-                        foreach (NewtonCollider treeCollider in treeGameObject.GetComponents<NewtonCollider>())
-                        {
-                            dNewtonCollision treeShape = treeCollider.CreateBodyShape(body.m_world);
-                            if (treeShape != null)
-                            {
-                                ColliderShapePair pair;
-                                Vector3 treePosit = terrain.transform.position + treeCollider.m_posit + posit;
-                                //Debug.Log("xxx1 " + treePosit);
-                                dMatrix matrix = Utils.ToMatrix(treePosit, Quaternion.identity);
-                                treeShape.SetMatrix(matrix);
-                                
-                                pair.m_collider = treeCollider;
-                                pair.m_shape = treeShape;
-                                colliderList.Add(pair);
+                Terrain terrain = gameObject.GetComponent<Terrain>();
+                if (terrain) {
+                    NewtonHeighfieldCollider heighfield = gameObject.GetComponent<NewtonHeighfieldCollider>();
+                    if (heighfield) {
+                        TerrainData data = terrain.terrainData;
+
+                        int treesCount = data.treeInstanceCount;
+                        TreeInstance[] treeInstanceArray = data.treeInstances;
+                        TreePrototype[] treeProtoArray = data.treePrototypes;
+
+                        Vector3 posit = Vector3.zero;
+                        for (int i = 0; i < treesCount; i++) {
+                            TreeInstance tree = treeInstanceArray[i];
+                            posit.x = tree.position.x * data.size.x;
+                            posit.y = tree.position.y * data.size.y;
+                            posit.z = tree.position.z * data.size.z;
+
+                            //Debug.Log("xxx0 " + posit);
+                            TreePrototype treeProto = treeProtoArray[tree.prototypeIndex];
+                            GameObject treeGameObject = treeProto.prefab;
+                            foreach (NewtonCollider treeCollider in treeGameObject.GetComponents<NewtonCollider>()) {
+                                dNewtonCollision treeShape = treeCollider.CreateBodyShape(body.m_world);
+                                if (treeShape != null) {
+                                    ColliderShapePair pair;
+                                    Vector3 treePosit = terrain.transform.position + treeCollider.m_posit + posit;
+                                    //Debug.Log("xxx1 " + treePosit);
+                                    dMatrix matrix = Utils.ToMatrix(treePosit, Quaternion.identity);
+                                    treeShape.SetMatrix(matrix);
+
+                                    pair.m_collider = treeCollider;
+                                    pair.m_shape = treeShape;
+                                    colliderList.Add(pair);
+                                }
                             }
                         }
                     }
                 }
-            }
-                
 
-            foreach (Transform child in gameObject.transform)
-            {
-                TraverseColliders(child.gameObject, colliderList, rootObject, body);
+
+                foreach (Transform child in gameObject.transform) {
+                    TraverseColliders(child.gameObject, colliderList, rootObject, body);
+                }
             }
         }
-    }
 
-    public dNewtonCollision GetShape()
-    {
-        return m_collidersArray[0].m_shape;
-    }
+        public dNewtonCollision GetShape() {
+            return m_collidersArray[0].m_shape;
+        }
 
-    private ColliderShapePair[] m_collidersArray;
+        private ColliderShapePair[] m_collidersArray;
+    }
 }
 

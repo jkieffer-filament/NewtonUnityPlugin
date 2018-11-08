@@ -20,14 +20,15 @@
 
 using UnityEngine;
 using System;
+using Newton.Internal;
 
-public class NewtonCompoundCollider: NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision collider = new dNewtonCollisionCompound(world.GetWorld());
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+namespace Newton {
+    public class NewtonCompoundCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision collider = new dNewtonCollisionCompound(world.GetWorld());
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
     }
 }

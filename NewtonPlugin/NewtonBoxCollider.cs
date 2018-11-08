@@ -20,17 +20,18 @@
 
 using UnityEngine;
 using System;
+using Newton.Internal;
 
-[AddComponentMenu("Newton Physics/Colliders/Box")]
-public class NewtonBoxCollider: NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision collider = new dNewtonCollisionBox(world.GetWorld(), m_size.x, m_size.y, m_size.z);
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+namespace Newton {
+    [AddComponentMenu("Newton Physics/Colliders/Box")]
+    public class NewtonBoxCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision collider = new dNewtonCollisionBox(world.GetWorld(), m_size.x, m_size.y, m_size.z);
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
+
+        public Vector3 m_size = Vector3.one;
     }
-
-    public Vector3 m_size = Vector3.one;
 }

@@ -22,23 +22,23 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newton.Internal;
+
+namespace Newton {
+
+    [CreateAssetMenu(menuName = "Newton Material")]
+    public class NewtonMaterial : ScriptableObject {
+    }
 
 
-[CreateAssetMenu(menuName = "Newton Material")]
-public class NewtonMaterial : ScriptableObject
-{
+    [CreateAssetMenu(menuName = "Newton Material Interaction")]
+    public class NewtonMaterialInteraction : ScriptableObject {
+        public NewtonMaterial m_material_0 = null;
+        public NewtonMaterial m_material_1 = null;
+        public float m_restitution = 0.3f;
+        public float m_staticFriction = 0.9f;
+        public float m_kineticFriction = 0.75f;
+        public bool m_collisionEnabled = true;
+    }
 }
-
-
-[CreateAssetMenu(menuName = "Newton Material Interaction")]
-public class NewtonMaterialInteraction : ScriptableObject
-{
-    public NewtonMaterial m_material_0 = null;
-    public NewtonMaterial m_material_1 = null;
-    public float m_restitution = 0.3f;
-    public float m_staticFriction = 0.9f; 
-    public float m_kineticFriction = 0.75f;
-    public bool m_collisionEnabled = true;
-}
-
 

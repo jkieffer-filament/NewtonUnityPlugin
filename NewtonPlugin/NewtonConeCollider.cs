@@ -20,19 +20,20 @@
 
 using UnityEngine;
 using System;
+using Newton.Internal;
 
-[AddComponentMenu("Newton Physics/Colliders/Cone")]
-public class NewtonConeCollider : NewtonCollider
-{
-    public override dNewtonCollision Create(NewtonWorld world)
-    {
-        dNewtonCollision collider = new dNewtonCollisionCone(world.GetWorld(), m_radius, m_height);
-        SetMaterial(collider);
-        SetLayer(collider);
-        return collider;
+namespace Newton {
+    [AddComponentMenu("Newton Physics/Colliders/Cone")]
+    public class NewtonConeCollider : NewtonCollider {
+        public override dNewtonCollision Create(NewtonWorld world) {
+            dNewtonCollision collider = new dNewtonCollisionCone(world.GetWorld(), m_radius, m_height);
+            SetMaterial(collider);
+            SetLayer(collider);
+            return collider;
+        }
+
+        public float m_radius = 0.5f;
+        public float m_height = 1.0f;
     }
-
-    public float m_radius = 0.5f;
-    public float m_height = 1.0f;
 }
 
