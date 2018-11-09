@@ -29,6 +29,7 @@
 #include <dCustomJoint.h>
 #include <dCustomBallAndSocket.h>
 #include <dCustomGear.h>
+#include <dCustomRackAndPinion.h>
 #include <dCustomPlane.h>
 #include <dCustomHinge.h>
 #include <dCustomSlider.h>
