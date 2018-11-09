@@ -51,4 +51,19 @@ void dNewtonJointSlidingHinge::SetAsSpringDamper(bool enable, dFloat forceMixing
 	joint->SetAsSpringDamper(enable, dClamp(forceMixing, 0.7f, 0.99f), dAbs(springConst), dAbs(damperConst));
 }
 
+void dNewtonJointSlidingHinge::SetAngularLimits(bool enable, dFloat minAngle, dFloat maxAngle)
+{
+	dCustomSlidingContact* const joint = (dCustomSlidingContact*)m_joint;
+	joint->EnableLimits(enable);
+	if (enable) {
+		joint->SetAngularLimits(minAngle, maxAngle);
+	}
+}
+
+void dNewtonJointSlidingHinge::SetAsAngularSpringDamper(bool enable, dFloat forceMixing, dFloat springConst, dFloat damperConst)
+{
+	dCustomSlidingContact* const joint = (dCustomSlidingContact*)m_joint;
+	joint->SetAsAngularSpringDamper(enable, dClamp(forceMixing, 0.7f, 0.99f), dAbs(springConst), dAbs(damperConst));
+}
+
 

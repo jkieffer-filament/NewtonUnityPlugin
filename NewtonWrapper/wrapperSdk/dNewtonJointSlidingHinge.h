@@ -31,6 +31,8 @@ class dNewtonJointSlidingHinge: public dNewtonJoint
 
 	void SetLimits(bool enable, dFloat minDistance, dFloat maxDistance);
 	void SetAsSpringDamper(bool enable, dFloat forceMixing, dFloat springConst, dFloat damperConst);
+	void SetAngularLimits(bool enable, dFloat minAngle, dFloat maxAngle);
+	void SetAsAngularSpringDamper(bool enable, dFloat forceMixing, dFloat springConst, dFloat damperConst);
 };
 
 #endif
