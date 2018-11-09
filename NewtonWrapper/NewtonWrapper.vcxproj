@@ -191,7 +191,7 @@ xcopy  "$(NEWTON_DYNAMICS)\sdk\projects\visualStudio_2015_static_mt\x64\dgNewton
   <ItemGroup>
     <CustomBuild Include="newton.i">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\swigwin-3.0.8\swig.exe -IwrapperSdk -I$(NEWTON_DYNAMICS)/sdk/dMath -I$(NEWTON_DYNAMICS)/sdk/dContainers -I$(NEWTON_DYNAMICS)/sdk/dCustomJoints -c++ -csharp -outdir ../NewtonPlugin -outfile %(Filename)_wrap.cs  %(Filename)%(Extension)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\swigwin-3.0.8\swig.exe -IwrapperSdk -I$(NEWTON_DYNAMICS)/sdk/dMath -I$(NEWTON_DYNAMICS)/sdk/dContainers -I$(NEWTON_DYNAMICS)/sdk/dCustomJoints -c++ -csharp -namespace Newton.Internal -outdir ../NewtonPlugin -outfile %(Filename)_wrap.cs  %(Filename)%(Extension)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\swigwin-3.0.8\swig.exe -IwrapperSdk -I$(NEWTON_DYNAMICS)/sdk/dMath -I$(NEWTON_DYNAMICS)/sdk/dContainers -I$(NEWTON_DYNAMICS)/sdk/dCustomJoints -c++ -csharp -namespace Newton.Internal -outdir ../NewtonPlugin -outfile %(Filename)_wrap.cs  %(Filename)%(Extension)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">building newton sdk csharp wraper %(Filename)_wrap.cs</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">building newton sdk csharp wraper %(Filename)_wrap.cs</Message>
