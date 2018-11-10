@@ -88,12 +88,13 @@ namespace Newton {
         public virtual Vector3 GetScale() {
             Vector3 scale = m_scale;
             if (m_inheritTransformScale) {
+                var lossyScale = transform.lossyScale;
                 //scale.x *= transform.localScale.x;
                 //scale.y *= transform.localScale.y;
                 //scale.z *= transform.localScale.z;
-                scale.x *= transform.lossyScale.x;
-                scale.y *= transform.lossyScale.y;
-                scale.z *= transform.lossyScale.z;
+                scale.x *= lossyScale.x;
+                scale.y *= lossyScale.y;
+                scale.z *= lossyScale.z;
             }
             return scale;
         }

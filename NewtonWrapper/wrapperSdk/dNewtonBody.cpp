@@ -172,6 +172,27 @@ void dNewtonBody::SetAngularDamping(dFloat x, dFloat y, dFloat z)
 	NewtonBodySetAngularDamping(m_body, &damp.m_x);
 }
 
+void* dNewtonBody::GetMass() {
+	dFloat tmp_Ixx;
+	dFloat tmp_Iyy;
+	dFloat tmp_Izz;
+	dFloat mass;
+
+	NewtonBodyGetMass(m_body, &mass, &tmp_Ixx, &tmp_Iyy, &tmp_Izz);
+
+	return &mass;
+}
+
+void dNewtonBody::SetMass(dFloat mass) {
+	dFloat tmp_Ixx;
+	dFloat tmp_Iyy;
+	dFloat tmp_Izz;
+	dFloat tmp_Mass;
+
+	NewtonBodyGetMass(m_body, &tmp_Mass, &tmp_Ixx, &tmp_Iyy, &tmp_Izz);
+	NewtonBodySetMassMatrix(m_body, mass, tmp_Ixx, tmp_Iyy, tmp_Izz);
+}
+
 void* dNewtonBody::GetCenterOfMass()
 {
 	NewtonBodyGetCentreOfMass(m_body, &m_com.m_x);

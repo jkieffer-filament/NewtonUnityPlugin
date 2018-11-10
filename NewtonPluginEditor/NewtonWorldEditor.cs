@@ -47,7 +47,6 @@ namespace Newton.Editor {
             // Setup the SerializedProperties
             m_gravityProp = serializedObject.FindProperty("m_gravity");
             m_subStepsProp = serializedObject.FindProperty("m_subSteps");
-            m_updateRateProp = serializedObject.FindProperty("m_updateRate");
             m_asyncUpdateProp = serializedObject.FindProperty("m_asyncUpdate");
             m_saveSceneNameProp = serializedObject.FindProperty("m_saveSceneName");
             m_serializeSceneOnceProp = serializedObject.FindProperty("m_serializeSceneOnce");
@@ -76,7 +75,6 @@ namespace Newton.Editor {
 
             EditorGUILayout.IntPopup(m_numThreadsProp, m_numberOfThreadsOptions, m_numberOfThreadsValues, new GUIContent("Worker threads"));
             EditorGUILayout.IntSlider(m_solverIterationsCountProp, 1, 10, new GUIContent("Solver iterations count"));
-            EditorGUILayout.IntSlider(m_updateRateProp, 60, 1000, new GUIContent("Update rate"));
             EditorGUILayout.IntSlider(m_subStepsProp, 1, 4, new GUIContent("Number of update sub steps"));
             EditorGUILayout.IntPopup(m_broadPhaseTypeProp, m_broadPhaseOptions, m_broadPhaseValues, new GUIContent("Broad phase type"));
             EditorGUILayout.PropertyField(m_gravityProp, new GUIContent("Gravity"));
@@ -91,7 +89,6 @@ namespace Newton.Editor {
 
         SerializedProperty m_gravityProp;
         SerializedProperty m_subStepsProp;
-        SerializedProperty m_updateRateProp;
         SerializedProperty m_numThreadsProp;
         SerializedProperty m_asyncUpdateProp;
         SerializedProperty m_saveSceneNameProp;

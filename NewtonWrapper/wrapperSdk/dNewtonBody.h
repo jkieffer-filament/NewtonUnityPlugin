@@ -66,6 +66,9 @@ class dNewtonBody: public dAlloc
 	void* GetAngularDamping();
 	void SetAngularDamping(dFloat x, dFloat y, dFloat z);
 
+	void* GetMass();
+	void SetMass(dFloat mass);
+
 	void* GetCenterOfMass();
 	void SetCenterOfMass(float com_x, float com_y, float com_z, float Ixx, float Iyy, float Izz, bool Calc_inertia);
 	void CalculateBuoyancyForces(const void* plane, void* force, void* torque, float bodyDensity);

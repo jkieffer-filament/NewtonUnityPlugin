@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{8A605A51-7CA4-E094-A5FE-58C1B98B87AC}</ProjectGuid>
+    <ProjectGuid>{AC7FE60A-8433-0635-B1FC-FF3CEE16D926}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -55,16 +55,16 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Motor.cs" />
  <Reference Include="UnityEditor.StandardEvents">
- <HintPath>C:/Users/Jonathan/Documents/Repos/Filament/NewtonTest/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+ <HintPath>C:/Users/Jonathan/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>C:/Users/Jonathan/Documents/Repos/Filament/NewtonTest/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>C:/Users/Jonathan/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>C:/Users/Jonathan/Documents/Repos/Filament/NewtonTest/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ <HintPath>C:/Users/Jonathan/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>C:/Users/Jonathan/Documents/Repos/Filament/NewtonTest/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>C:/Users/Jonathan/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.0f2/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -262,7 +262,7 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.0f2/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="NewtonPlugin">
- <HintPath>C:/Users/Jonathan/Documents/Repos/Filament/NewtonTest/Assets/Plugins/NewtonPlugin.dll</HintPath>
+ <HintPath>C:/Users/Jonathan/Documents/Repos/NewtonUnityPlugin/Demos/Assets/Plugins/NewtonPlugin.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/Jonathan/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>

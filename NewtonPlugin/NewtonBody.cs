@@ -69,18 +69,16 @@ namespace Newton {
 
         void OnDrawGizmosSelected() {
             if (m_showGizmo) {
-                Matrix4x4 bodyMatrix = Matrix4x4.identity;
-                bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-                Gizmos.matrix = bodyMatrix;
+                Gizmos.matrix = transform.localToWorldMatrix;
 
                 Gizmos.color = Color.red;
-                Gizmos.DrawRay(m_centerOfMass, bodyMatrix.GetColumn(0) * m_gizmoScale);
+                Gizmos.DrawRay(m_centerOfMass, Vector3.right * m_gizmoScale);
 
                 Gizmos.color = Color.green;
-                Gizmos.DrawRay(m_centerOfMass, bodyMatrix.GetColumn(1) * m_gizmoScale);
+                Gizmos.DrawRay(m_centerOfMass, Vector3.up * m_gizmoScale);
 
                 Gizmos.color = Color.blue;
-                Gizmos.DrawRay(m_centerOfMass, bodyMatrix.GetColumn(2) * m_gizmoScale);
+                Gizmos.DrawRay(m_centerOfMass, Vector3.forward * m_gizmoScale);
             }
         }
 
@@ -224,6 +222,16 @@ namespace Newton {
                 }
             }
 
+        }
+
+        public float Mass {
+            get { return m_mass; }
+            set {
+                m_mass = value;
+                if (m_body != null) {
+                    m_body.SetMass(value);
+                }
+            }
         }
 
         public Vector3 CenterOfMass {
