@@ -35,7 +35,7 @@
 #include <dCustomSlider.h>
 #include <dCustomDoubleHinge.h>
 #include <dCustomHingeActuator.h>
-#include <dCustomSlidingContact.h>
+#include <dCustomCorkscrew.h>
 #include <dCustomSliderActuator.h>
 #include <dCustomDoubleHingeActuator.h>
 #include <dCustomVehicleControllerManager.h>

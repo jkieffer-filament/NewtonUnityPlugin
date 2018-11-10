@@ -53,16 +53,34 @@ namespace Newton {
     [DisallowMultipleComponent]
     [AddComponentMenu("Newton Physics/Newton World")]
     public class NewtonWorld : MonoBehaviour {
+
+        private static NewtonWorld s_Current;
+        public static NewtonWorld Current {
+            get {
+                if (ReferenceEquals(s_Current, null)) {
+                    s_Current = FindObjectOfType<NewtonWorld>();
+                }
+                return s_Current;
+            }
+        }
+
+
         public dNewtonWorld GetWorld() {
             return m_world;
         }
 
-        void Start() {
+        private void Awake() {
+            if (ReferenceEquals(s_Current, null)) {
+                s_Current = this;
+            } else if (!ReferenceEquals(s_Current, this)) {
+                Destroy(this);
+            }
+
             m_onWorldCallback = new OnWorldUpdateCallback(OnWorldUpdate);
             m_onWorldBodyTransfromUpdateCallback = new OnWorldBodyTransfromUpdateCallback(OnBodyTransformUpdate);
 
             m_world.SetAsyncUpdate(m_asyncUpdate);
-            m_world.SetFrameRate(m_updateRate);
+            m_world.SetFrameRate(1f/Time.fixedDeltaTime);
             m_world.SetThreadsCount(m_numberOfThreads);
             m_world.SetSolverIterations(m_solverIterationsCount);
             m_world.SetBroadPhase(m_broadPhaseType);
@@ -92,7 +110,12 @@ namespace Newton {
             InitScene();
         }
 
+
         void OnDestroy() {
+            if (ReferenceEquals(s_Current, this)) {
+                s_Current = null;
+            }
+
             DestroyScene();
             m_onWorldCallback = null;
             m_onWorldBodyTransfromUpdateCallback = null;
@@ -100,42 +123,12 @@ namespace Newton {
         }
 
         internal void RegisterBody(NewtonBody nb) {
-            if (!m_bodies.Contains(nb))     // Had to add this
-            {
-                m_bodies.Add(nb);
-            }
+            m_bodies.Add(nb); 
         }
 
-        internal void UnregisterBody(NewtonBody nb) {
+        internal void DeregisterBody(NewtonBody nb) {
             m_bodies.Remove(nb);
         }
-
-        //private void InitPhysicsScene(GameObject root)
-        //{
-        //    NewtonBody bodyPhysics = root.GetComponent<NewtonBody>();
-        //    if (bodyPhysics != null)
-        //    {
-        //        bodyPhysics.InitRigidBody();
-        //    }
-
-        //    foreach (Transform child in root.transform)
-        //    {
-        //        InitPhysicsScene(child.gameObject);
-        //    }
-        //}
-
-        //private void InitPhysicsJoints(GameObject root)
-        //{
-        //    foreach (NewtonJoint joint in root.GetComponents<NewtonJoint>())
-        //    {
-        //        joint.Create();
-        //    }
-
-        //    foreach (Transform child in root.transform)
-        //    {
-        //        InitPhysicsJoints(child.gameObject);
-        //    }
-        //}
 
         private void InitScene() {
             Resources.LoadAll("Newton Materials");
@@ -148,16 +141,6 @@ namespace Newton {
                     m_world.SetMaterialInteraction(id0, id1, materialInteraction.m_restitution, materialInteraction.m_staticFriction, materialInteraction.m_kineticFriction, materialInteraction.m_collisionEnabled);
                 }
             }
-
-            //GameObject[] objectList = gameObject.scene.GetRootGameObjects();
-            //foreach (GameObject rootObj in objectList)
-            //{
-            //    InitPhysicsScene(rootObj);
-            //}
-            //foreach (GameObject rootObj in objectList)
-            //{
-            //    InitPhysicsJoints(rootObj);
-            //}
         }
 
         private void DestroyScene() {
@@ -170,14 +153,14 @@ namespace Newton {
             }
         }
 
-        void Update() {
+        void FixedUpdate() {
             //Debug.Log("Update time :" + Time.deltaTime);
             if (m_serializeSceneOnce) {
                 m_serializeSceneOnce = false;
                 m_world.SaveSerializedScene(m_saveSceneName);
             }
 
-            m_world.Update(Time.deltaTime);
+            m_world.Update(Time.fixedDeltaTime);
         }
 
         private void OnWorldUpdate(float timestep) {
@@ -255,7 +238,6 @@ namespace Newton {
         public int m_broadPhaseType = 0;
         public int m_numberOfThreads = 0;
         public int m_solverIterationsCount = 1;
-        public int m_updateRate = 60;
         public int m_subSteps = 2;
         public int m_pluginsOptions = 0;
 
@@ -268,7 +250,7 @@ namespace Newton {
         private OnWorldUpdateCallback m_onWorldCallback;
         private OnWorldBodyTransfromUpdateCallback m_onWorldBodyTransfromUpdateCallback;
 
-        private List<NewtonBody> m_bodies = new List<NewtonBody>();
+        private HashSet<NewtonBody> m_bodies = new HashSet<NewtonBody>();
     }
 }
 

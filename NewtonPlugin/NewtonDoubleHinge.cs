@@ -24,68 +24,63 @@ using System.Runtime.InteropServices;
 using Newton.Internal;
 
 namespace Newton {
-    [AddComponentMenu("Newton Physics/Joints/Universal")]
+    [AddComponentMenu("Newton Physics/Joints/Double Hinge")]
     public class NewtonDoubleHinge : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, m_Pin0, m_Pin1);
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
             m_Joint = new dNewtonJointDoubleHinge(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
-            EnableLimits_0 = m_enableLimits_0;
+            EnableLimits_0 = m_EnableLimits_0;
         }
 
         void OnDrawGizmosSelected() {
-            Matrix4x4 bodyMatrix = Matrix4x4.identity;
-            Matrix4x4 localMatrix = Matrix4x4.identity;
-            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-            localMatrix.SetTRS(Vector3.zero, Quaternion.Euler(m_rotation), Vector3.one);
-
-            Gizmos.matrix = bodyMatrix;
+            Gizmos.matrix = transform.localToWorldMatrix;
 
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+            Gizmos.DrawRay(m_Pivot, m_Pin0.normalized * m_GizmoScale);
 
             Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_GizmoScale);
+            Gizmos.DrawRay(m_Pivot, m_Pin1.normalized * m_GizmoScale);
         }
 
         public bool EnableLimits_0 {
             get {
-                return m_enableLimits_0;
+                return m_EnableLimits_0;
             }
             set {
-                m_enableLimits_0 = value;
+                m_EnableLimits_0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
+                    joint.SetLimits_0(m_EnableLimits_0, m_MinLimit_0, m_MaxLimit_0);
                 }
             }
         }
 
         public float MinimumLimit_0 {
             get {
-                return m_minLimit_0;
+                return m_MinLimit_0;
             }
             set {
-                m_minLimit_0 = value;
+                m_MinLimit_0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
+                    joint.SetLimits_0(m_EnableLimits_0, m_MinLimit_0, m_MaxLimit_0);
                 }
             }
         }
 
         public float MaximunLimit_0 {
             get {
-                return m_maxLimit_0;
+                return m_MaxLimit_0;
             }
             set {
-                m_maxLimit_0 = value;
+                m_MaxLimit_0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_0(m_enableLimits_0, m_minLimit_0, m_maxLimit_0);
+                    joint.SetLimits_0(m_EnableLimits_0, m_MinLimit_0, m_MaxLimit_0);
                 }
             }
         }
@@ -93,51 +88,61 @@ namespace Newton {
 
         public bool EnableLimits_1 {
             get {
-                return m_enableLimits_1;
+                return m_EnableLimits_1;
             }
             set {
-                m_enableLimits_1 = value;
+                m_EnableLimits_1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
+                    joint.SetLimits_1(m_EnableLimits_1, m_MinLimit_1, m_MaxLimit_1);
                 }
             }
         }
 
         public float MinimumLimit_1 {
             get {
-                return m_minLimit_1;
+                return m_MinLimit_1;
             }
             set {
-                m_minLimit_1 = value;
+                m_MinLimit_1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
+                    joint.SetLimits_1(m_EnableLimits_1, m_MinLimit_1, m_MaxLimit_1);
                 }
             }
         }
 
         public float MaximunLimit_1 {
             get {
-                return m_maxLimit_1;
+                return m_MaxLimit_1;
             }
             set {
-                m_maxLimit_1 = value;
+                m_MaxLimit_1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHinge joint = (dNewtonJointDoubleHinge)m_Joint;
-                    joint.SetLimits_1(m_enableLimits_1, m_minLimit_1, m_maxLimit_1);
+                    joint.SetLimits_1(m_EnableLimits_1, m_MinLimit_1, m_MaxLimit_1);
                 }
             }
         }
 
-        public Vector3 m_posit = Vector3.zero;
-        public Vector3 m_rotation = Vector3.zero;
-        public bool m_enableLimits_0 = false;
-        public float m_minLimit_0 = -30.0f;
-        public float m_maxLimit_0 = 30.0f;
-        public bool m_enableLimits_1 = false;
-        public float m_minLimit_1 = -30.0f;
-        public float m_maxLimit_1 = 30.0f;
+        [SerializeField]
+        private Vector3 m_Pivot = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pin0 = Vector3.right;
+        [SerializeField]
+        private Vector3 m_Pin1 = Vector3.up;
+        [SerializeField]
+        private bool m_EnableLimits_0 = false;
+        [SerializeField]
+        private float m_MinLimit_0 = -30.0f;
+        [SerializeField]
+        private float m_MaxLimit_0 = 30.0f;
+        [SerializeField]
+        private bool m_EnableLimits_1 = false;
+        [SerializeField]
+        private float m_MinLimit_1 = -30.0f;
+        [SerializeField]
+        private float m_MaxLimit_1 = 30.0f;
     }
 
 
@@ -145,94 +150,89 @@ namespace Newton {
     public class NewtonDoubleHingeActuator : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, m_Pin0, m_Pin1);
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
             m_Joint = new dNewtonJointDoubleHingeActuator(matrix, child.GetBody().GetBody(), otherBody);
 
-            TargetAngle0 = m_targetAngle0;
-            AngularRate0 = m_angularRate0;
-            MaxTorque0 = m_maxTorque0;
+            TargetAngle0 = m_TargetAngle0;
+            AngularRate0 = m_AngularRate0;
+            MaxTorque0 = m_MaxTorque0;
 
-            TargetAngle1 = m_targetAngle1;
-            AngularRate1 = m_angularRate1;
-            MaxTorque1 = m_maxTorque1;
+            TargetAngle1 = m_TargetAngle1;
+            AngularRate1 = m_AngularRate1;
+            MaxTorque1 = m_MaxTorque1;
         }
 
         void OnDrawGizmosSelected() {
-            Matrix4x4 bodyMatrix = Matrix4x4.identity;
-            Matrix4x4 localMatrix = Matrix4x4.identity;
-            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
-
-            Gizmos.matrix = bodyMatrix;
+            Gizmos.matrix = transform.worldToLocalMatrix;
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+            Gizmos.DrawRay(m_Pivot, m_Pin0.normalized * m_GizmoScale);
 
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(1) * m_GizmoScale);
+            Gizmos.DrawRay(m_Pivot, m_Pin1.normalized * m_GizmoScale);
         }
 
         public float MaxTorque0 {
             get {
-                return m_maxTorque0;
+                return m_MaxTorque0;
             }
             set {
-                m_maxTorque0 = value;
+                m_MaxTorque0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetMaxToque0(m_maxTorque0);
+                    joint.SetMaxTorque0(m_MaxTorque0);
                 }
             }
         }
 
         public float AngularRate0 {
             get {
-                return m_angularRate0;
+                return m_AngularRate0;
             }
             set {
-                m_angularRate0 = value;
+                m_AngularRate0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetAngularRate0(m_angularRate0);
+                    joint.SetAngularRate0(m_AngularRate0);
                 }
             }
         }
 
         public float TargetAngle0 {
             get {
-                return m_targetAngle0;
+                return m_TargetAngle0;
             }
             set {
-                m_targetAngle0 = value;
+                m_TargetAngle0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
+                    joint.SetTargetAngle0(m_TargetAngle0, m_MinAngle0, m_MaxAngle0);
                 }
             }
         }
 
         public float MinimumAngle0 {
             get {
-                return m_minAngle0;
+                return m_MinAngle0;
             }
             set {
-                m_minAngle0 = value;
+                m_MinAngle0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
+                    joint.SetTargetAngle0(m_TargetAngle0, m_MinAngle0, m_MaxAngle0);
                 }
             }
         }
 
         public float MaximumAngle0 {
             get {
-                return m_maxAngle0;
+                return m_MaxAngle0;
             }
             set {
-                m_maxAngle0 = value;
+                m_MaxAngle0 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle0(m_targetAngle0, m_minAngle0, m_maxAngle0);
+                    joint.SetTargetAngle0(m_TargetAngle0, m_MinAngle0, m_MaxAngle0);
                 }
             }
         }
@@ -262,65 +262,65 @@ namespace Newton {
 
         public float MaxTorque1 {
             get {
-                return m_maxTorque1;
+                return m_MaxTorque1;
             }
             set {
-                m_maxTorque1 = value;
+                m_MaxTorque1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetMaxToque1(m_maxTorque1);
+                    joint.SetMaxTorque1(m_MaxTorque1);
                 }
             }
         }
 
         public float AngularRate1 {
             get {
-                return m_angularRate1;
+                return m_AngularRate1;
             }
             set {
-                m_angularRate1 = value;
+                m_AngularRate1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetAngularRate1(m_angularRate1);
+                    joint.SetAngularRate1(m_AngularRate1);
                 }
             }
         }
 
         public float TargetAngle1 {
             get {
-                return m_targetAngle1;
+                return m_TargetAngle1;
             }
             set {
-                m_targetAngle1 = value;
+                m_TargetAngle1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
+                    joint.SetTargetAngle1(m_TargetAngle1, m_MinAngle1, m_MaxAngle1);
                 }
             }
         }
 
         public float MinimumAngle1 {
             get {
-                return m_minAngle1;
+                return m_MinAngle1;
             }
             set {
-                m_minAngle1 = value;
+                m_MinAngle1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
+                    joint.SetTargetAngle1(m_TargetAngle1, m_MinAngle1, m_MaxAngle1);
                 }
             }
         }
 
         public float MaximumAngle1 {
             get {
-                return m_maxAngle1;
+                return m_MaxAngle1;
             }
             set {
-                m_maxAngle1 = value;
+                m_MaxAngle1 = value;
                 if (m_Joint != null) {
                     dNewtonJointDoubleHingeActuator joint = (dNewtonJointDoubleHingeActuator)m_Joint;
-                    joint.SetTargetAngle1(m_targetAngle1, m_minAngle1, m_maxAngle1);
+                    joint.SetTargetAngle1(m_TargetAngle1, m_MinAngle1, m_MaxAngle1);
                 }
             }
         }
@@ -334,20 +334,32 @@ namespace Newton {
             return angle;
         }
 
-
-        public Vector3 m_posit = Vector3.zero;
-        public Vector3 m_rotation = Vector3.zero;
-        public float m_maxTorque0 = 10.0f;
-        public float m_angularRate0 = 1.0f;
-        public float m_targetAngle0 = 0.0f;
-        public float m_minAngle0 = -360.0f;
-        public float m_maxAngle0 = 360.0f;
-
-        public float m_maxTorque1 = 10.0f;
-        public float m_angularRate1 = 1.0f;
-        public float m_targetAngle1 = 0.0f;
-        public float m_minAngle1 = -360.0f;
-        public float m_maxAngle1 = 360.0f;
+        [SerializeField]
+        private Vector3 m_Pivot = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pin0 = Vector3.right;
+        [SerializeField]
+        private Vector3 m_Pin1 = Vector3.up;
+        [SerializeField]
+        private float m_MaxTorque0 = 10.0f;
+        [SerializeField]
+        private float m_AngularRate0 = 1.0f;
+        [SerializeField]
+        private float m_TargetAngle0 = 0.0f;
+        [SerializeField]
+        private float m_MinAngle0 = -360.0f;
+        [SerializeField]
+        private float m_MaxAngle0 = 360.0f;
+        [SerializeField]
+        private float m_MaxTorque1 = 10.0f;
+        [SerializeField]
+        private float m_AngularRate1 = 1.0f;
+        [SerializeField]
+        private float m_TargetAngle1 = 0.0f;
+        [SerializeField]
+        private float m_MinAngle1 = -360.0f;
+        [SerializeField]
+        private float m_MaxAngle1 = 360.0f;
 
     }
 }

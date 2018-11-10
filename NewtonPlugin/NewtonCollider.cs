@@ -155,8 +155,8 @@ namespace Newton {
                 }
 
                 if (body != null) {
-                    if (body.m_world != null) {
-                        m_editorShape = Create(body.m_world);
+                    if (body.World != null) {
+                        m_editorShape = Create(body.World);
                     }
                 }
             }

@@ -40,12 +40,12 @@ class dNewtonJointDoubleHingeActuator : public dNewtonJoint
 		dNewtonJointDoubleHingeActuator(const dMatrix pintAndPivotMatrix, void* const body0, void* const body1);
 
 	dFloat GetAngle0() const;
-	void SetMaxToque0(dFloat torque);
+	void SetMaxTorque0(dFloat torque);
 	void SetAngularRate0(dFloat rate);
 	void SetTargetAngle0(dFloat angle, dFloat minLimit, dFloat maxLimit);
 
 	dFloat GetAngle1() const;
-	void SetMaxToque1(dFloat torque);
+	void SetMaxTorque1(dFloat torque);
 	void SetAngularRate1(dFloat rate);
 	void SetTargetAngle1(dFloat angle, dFloat minLimit, dFloat maxLimit);
 };

@@ -18,16 +18,16 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef _D_NEWTON_JOINT_SLIDING_HINGE_H_
-#define _D_NEWTON_JOINT_SLIDING_HINGE_H_
+#ifndef _D_NEWTON_JOINT_CORKSCREW_H_
+#define _D_NEWTON_JOINT_CORKSCREW_H_
 
 #include "stdafx.h"
 #include "dNewtonJoint.h"
 
-class dNewtonJointSlidingHinge: public dNewtonJoint
+class dNewtonJointCorkscrew: public dNewtonJoint
 {
 	public:
-	dNewtonJointSlidingHinge(const dMatrix pintAndPivotMatrix, void* const body0, void* const body1);
+	dNewtonJointCorkscrew(const dMatrix pintAndPivotMatrix, void* const body0, void* const body1);
 
 	void SetLimits(bool enable, dFloat minDistance, dFloat maxDistance);
 	void SetAsSpringDamper(bool enable, dFloat forceMixing, dFloat springConst, dFloat damperConst);

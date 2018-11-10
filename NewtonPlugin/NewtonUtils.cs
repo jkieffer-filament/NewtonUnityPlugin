@@ -37,6 +37,23 @@ namespace Newton {
         }
 
 
+        static public dMatrix ToMatrix(Vector3 posit, Vector3 pin0, Vector3 pin1) {
+
+            // make orthogonal basis vectors
+            Vector3 frontBasis = pin0.normalized;
+            Vector3 upBasis = pin1.normalized;
+            Vector3 rightBasis = Vector3.Cross(frontBasis, upBasis);
+            upBasis = Vector3.Cross(rightBasis, frontBasis);
+
+            dMatrix matrix = new dMatrix();
+            matrix.m_front = new dVector(frontBasis.x, frontBasis.y, frontBasis.z, 0f);
+            matrix.m_up = new dVector(upBasis.x, upBasis.y, upBasis.z, 0f);
+            matrix.m_right = new dVector(rightBasis.x, rightBasis.y, rightBasis.z, 0f);
+            matrix.m_posit = new dVector(posit.x, posit.y, posit.z, 1f);
+            return matrix;
+        }
+
+
         static public int dRand(int seed, int oldSeed) {
             return oldSeed + seed * 31415821;
         }

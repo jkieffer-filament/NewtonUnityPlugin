@@ -32,7 +32,7 @@ namespace Newton {
             m_isScene = false;
         }
 
-        public override void OnDestroy() {
+        protected override void OnDestroy() {
             Debug.Log("destroy vehicle");
 
             foreach (NewtonBodyWheel wheel in m_wheels) {
@@ -47,7 +47,7 @@ namespace Newton {
         protected override void CreateBodyAndCollision() {
             Debug.Log("create actual vehicle");
             m_collision = new NewtonBodyCollision(this);
-            m_body = new dNewtonVehicle(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+            m_body = new dNewtonVehicle(World.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
         }
 
         public override void InitRigidBody() {

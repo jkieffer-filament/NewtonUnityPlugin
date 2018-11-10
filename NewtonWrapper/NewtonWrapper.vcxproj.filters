@@ -30,9 +30,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>wrapperSdk</Filter>
     </ClCompile>
-    <ClCompile Include="wrapperSdk\dNewtonJointSlidingHinge.cpp">
-      <Filter>wrapperSdk</Filter>
-    </ClCompile>
     <ClCompile Include="wrapperSdk\dNewtonJointBallAndSocket.cpp">
       <Filter>wrapperSdk</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>wrapperSdk</Filter>
     </ClCompile>
     <ClCompile Include="wrapperSdk\dNewtonJointDoubleHinge.cpp">
+      <Filter>wrapperSdk</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapperSdk\dNewtonJointCorkscrew.cpp">
       <Filter>wrapperSdk</Filter>
     </ClCompile>
   </ItemGroup>
@@ -79,9 +79,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>wrapperSdk</Filter>
     </ClInclude>
-    <ClInclude Include="wrapperSdk\dNewtonJointSlidingHinge.h">
-      <Filter>wrapperSdk</Filter>
-    </ClInclude>
     <ClInclude Include="wrapperSdk\dNewtonJointBallAndSocket.h">
       <Filter>wrapperSdk</Filter>
     </ClInclude>
@@ -95,6 +92,9 @@
       <Filter>wrapperSdk</Filter>
     </ClInclude>
     <ClInclude Include="wrapperSdk\dNewtonJointDoubleHinge.h">
+      <Filter>wrapperSdk</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapperSdk\dNewtonJointCorkscrew.h">
       <Filter>wrapperSdk</Filter>
     </ClInclude>
   </ItemGroup>

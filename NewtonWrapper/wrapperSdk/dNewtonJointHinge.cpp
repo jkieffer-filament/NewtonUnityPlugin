@@ -72,7 +72,7 @@ dFloat dNewtonJointHingeActuator::GetAngle() const
 	return joint->GetActuatorAngle() * RAD_TO_DEGREES;
 }
 
-void dNewtonJointHingeActuator::SetMaxToque(dFloat torque)
+void dNewtonJointHingeActuator::SetMaxTorque(dFloat torque)
 {
 	dCustomHingeActuator* const joint = (dCustomHingeActuator*)m_joint;
 	joint->SetMaxTorque(dAbs(torque));
@@ -81,7 +81,7 @@ void dNewtonJointHingeActuator::SetMaxToque(dFloat torque)
 void dNewtonJointHingeActuator::SetAngularRate(dFloat rate)
 {
 	dCustomHingeActuator* const joint = (dCustomHingeActuator*)m_joint;
-	joint->SetAngularRate(dAbs(rate) * DEGREES_TO_RAD);
+	joint->SetAngularRate(rate * DEGREES_TO_RAD);
 }
 
 void dNewtonJointHingeActuator::SetTargetAngle(dFloat angle, dFloat minLimit, dFloat maxLimit)

@@ -116,7 +116,7 @@ namespace Newton {
 
             dVector childPin = new dVector(gearPinNorm.x, gearPinNorm.y, gearPinNorm.z, 0.0f);
             dVector parentPin = new dVector(slidePinNorm.x, slidePinNorm.y, slidePinNorm.z, 0.0f);
-            m_Joint = new dNewtonJointRackAndPinion(m_gearRatio, childPin, parentPin, child.GetBody().GetBody(), otherBody);
+            m_Joint = new dNewtonJointRackAndPinion(m_GearRatio, childPin, parentPin, child.GetBody().GetBody(), otherBody);
         }
 
         void OnDrawGizmosSelected() {
@@ -135,7 +135,7 @@ namespace Newton {
         [SerializeField]
         private Vector3 m_SlidePin = Vector3.right;
         [SerializeField]
-        private float m_gearRatio = 1.0f;
+        private float m_GearRatio = 1.0f;
     }
 }
 

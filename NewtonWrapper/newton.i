@@ -48,7 +48,7 @@
 	#include "dNewtonVehicleManager.h"
 	#include "dNewtonJointDoubleHinge.h"
 	#include "dNewtonJointRelational.h"
-	#include "dNewtonJointSlidingHinge.h"
+	#include "dNewtonJointCorkscrew.h"
 	#include "dNewtonJointBallAndSocket.h"
 	#include "dNewtonContact.h"
 %}
@@ -161,7 +161,7 @@
 %include "dNewtonJointSlider.h"
 %include "dNewtonJointDoubleHinge.h"
 %include "dNewtonJointRelational.h"
-%include "dNewtonJointSlidingHinge.h"
+%include "dNewtonJointCorkscrew.h"
 %include "dNewtonJointBallAndSocket.h"
 %include "dNewtonContact.h"
 

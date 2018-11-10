@@ -29,130 +29,134 @@ namespace Newton {
     public class NewtonSlider : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
             m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
-            EnableLimits = m_enableLimits;
-            SetSpringDamper = m_setSpringDamper;
+            EnableLimits = m_EnableLimits;
+            SetSpringDamper = m_SetSpringDamper;
         }
 
         void OnDrawGizmosSelected() {
-            Matrix4x4 bodyMatrix = Matrix4x4.identity;
-            Matrix4x4 localMatrix = Matrix4x4.identity;
-            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
-
             Gizmos.color = Color.red;
 
-            Gizmos.matrix = bodyMatrix;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
-            if (m_enableLimits) {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawRay(m_Pivot, m_Pin.normalized * m_GizmoScale);
+            if (m_EnableLimits) {
                 // draw hinge limit
             }
         }
 
         public bool EnableLimits {
             get {
-                return m_enableLimits;
+                return m_EnableLimits;
             }
             set {
-                m_enableLimits = value;
+                m_EnableLimits = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                    joint.SetLimits(m_EnableLimits, m_MinLimit, m_MaxLimit);
                 }
             }
         }
 
         public float MinimumLimit {
             get {
-                return m_minLimit;
+                return m_MinLimit;
             }
             set {
-                m_minLimit = value;
+                m_MinLimit = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                    joint.SetLimits(m_EnableLimits, m_MinLimit, m_MaxLimit);
                 }
             }
         }
 
         public float MaximunLimit {
             get {
-                return m_maxLimit;
+                return m_MaxLimit;
             }
             set {
-                m_maxLimit = value;
+                m_MaxLimit = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetLimits(m_enableLimits, m_minLimit, m_maxLimit);
+                    joint.SetLimits(m_EnableLimits, m_MinLimit, m_MaxLimit);
                 }
             }
         }
 
         public bool SetSpringDamper {
             get {
-                return m_setSpringDamper;
+                return m_SetSpringDamper;
             }
             set {
-                m_setSpringDamper = value;
+                m_SetSpringDamper = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                    joint.SetAsSpringDamper(m_SetSpringDamper, m_SpringDamperForceMixing, m_SpringConstant, m_DamperConstant);
                 }
             }
         }
 
         public float SpringDamperForceMixing {
             get {
-                return m_springDamperForceMixing;
+                return m_SpringDamperForceMixing;
             }
             set {
-                m_springDamperForceMixing = value;
+                m_SpringDamperForceMixing = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                    joint.SetAsSpringDamper(m_SetSpringDamper, m_SpringDamperForceMixing, m_SpringConstant, m_DamperConstant);
                 }
             }
         }
 
         public float SpringConstant {
             get {
-                return m_springConstant;
+                return m_SpringConstant;
             }
             set {
-                m_springConstant = value;
+                m_SpringConstant = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                    joint.SetAsSpringDamper(m_SetSpringDamper, m_SpringDamperForceMixing, m_SpringConstant, m_DamperConstant);
                 }
             }
         }
 
         public float DamperConstant {
             get {
-                return m_damperConstant;
+                return m_DamperConstant;
             }
             set {
-                m_damperConstant = value;
+                m_DamperConstant = value;
                 if (m_Joint != null) {
                     dNewtonJointSlider joint = (dNewtonJointSlider)m_Joint;
-                    joint.SetAsSpringDamper(m_setSpringDamper, m_springDamperForceMixing, m_springConstant, m_damperConstant);
+                    joint.SetAsSpringDamper(m_SetSpringDamper, m_SpringDamperForceMixing, m_SpringConstant, m_DamperConstant);
                 }
             }
         }
 
-        public Vector3 m_posit = Vector3.zero;
-        public Vector3 m_rotation = Vector3.zero;
-        public bool m_enableLimits = false;
-        public float m_minLimit = -1.0f;
-        public float m_maxLimit = 1.0f;
-        public bool m_setSpringDamper = false;
-        public float m_springDamperForceMixing = 0.9f;
-        public float m_springConstant = 0.0f;
-        public float m_damperConstant = 10.0f;
+        [SerializeField]
+        private Vector3 m_Pivot = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pin = Vector3.right;
+        [SerializeField]
+        private bool m_EnableLimits = false;
+        [SerializeField]
+        private float m_MinLimit = -1.0f;
+        [SerializeField]
+        private float m_MaxLimit = 1.0f;
+        [SerializeField]
+        private bool m_SetSpringDamper = false;
+        [SerializeField]
+        private float m_SpringDamperForceMixing = 0.9f;
+        [SerializeField]
+        private float m_SpringConstant = 0.0f;
+        [SerializeField]
+        private float m_DamperConstant = 10.0f;
     }
 
 
@@ -160,89 +164,85 @@ namespace Newton {
     public class NewtonSliderActuator : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
             m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
 
-            Speed = m_speed;
-            MaxForce = m_maxForce;
-            TargetPosition = m_targetPosition;
+            Speed = m_Speed;
+            MaxForce = m_MaxForce;
+            TargetPosition = m_TargetPosition;
         }
 
         void OnDrawGizmosSelected() {
-            Matrix4x4 bodyMatrix = Matrix4x4.identity;
-            Matrix4x4 localMatrix = Matrix4x4.identity;
-            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
 
             Gizmos.color = Color.red;
 
-            Gizmos.matrix = bodyMatrix;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawRay(m_Pivot, m_Pin.normalized * m_GizmoScale);
         }
 
 
         public float MaxForce {
             get {
-                return m_maxForce;
+                return m_MaxForce;
             }
             set {
-                m_maxForce = value;
+                m_MaxForce = value;
                 if (m_Joint != null) {
                     dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                    joint.SetMaxForce(m_maxForce);
+                    joint.SetMaxForce(m_MaxForce);
                 }
             }
         }
 
         public float Speed {
             get {
-                return m_speed;
+                return m_Speed;
             }
             set {
-                m_speed = value;
+                m_Speed = value;
                 if (m_Joint != null) {
                     dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                    joint.SetSpeed(m_speed);
+                    joint.SetSpeed(m_Speed);
                 }
             }
         }
 
         public float TargetPosition {
             get {
-                return m_targetPosition;
+                return m_TargetPosition;
             }
             set {
-                m_targetPosition = value;
+                m_TargetPosition = value;
                 if (m_Joint != null) {
                     dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                    joint.SetTargetPosition(m_TargetPosition, m_MinPosition, m_MaxPosition);
                 }
             }
         }
 
         public float MinimumPosition {
             get {
-                return m_minPosition;
+                return m_MinPosition;
             }
             set {
-                m_minPosition = value;
+                m_MinPosition = value;
                 if (m_Joint != null) {
                     dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                    joint.SetTargetPosition(m_TargetPosition, m_MinPosition, m_MaxPosition);
                 }
             }
         }
 
         public float MaximumPosition {
             get {
-                return m_maxPosition;
+                return m_MaxPosition;
             }
             set {
-                m_maxPosition = value;
+                m_MaxPosition = value;
                 if (m_Joint != null) {
                     dNewtonJointSliderActuator joint = (dNewtonJointSliderActuator)m_Joint;
-                    joint.SetTargetPosition(m_targetPosition, m_minPosition, m_maxPosition);
+                    joint.SetTargetPosition(m_TargetPosition, m_MinPosition, m_MaxPosition);
                 }
             }
         }
@@ -269,13 +269,20 @@ namespace Newton {
             }
         */
 
-        public Vector3 m_posit = Vector3.zero;
-        public Vector3 m_rotation = Vector3.zero;
-        public float m_maxForce = 10.0f;
-        public float m_speed = 1.0f;
-        public float m_targetPosition = 0.0f;
-        public float m_minPosition = -1.0f;
-        public float m_maxPosition = 1.0f;
+        [SerializeField]
+        private Vector3 m_Pivot = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pin = Vector3.right;
+        [SerializeField]
+        private float m_MaxForce = 10.0f;
+        [SerializeField]
+        private float m_Speed = 1.0f;
+        [SerializeField]
+        private float m_TargetPosition = 0.0f;
+        [SerializeField]
+        private float m_MinPosition = -1.0f;
+        [SerializeField]
+        private float m_MaxPosition = 1.0f;
     }
 }
 

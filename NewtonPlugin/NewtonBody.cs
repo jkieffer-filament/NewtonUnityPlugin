@@ -29,7 +29,12 @@ namespace Newton {
     [DisallowMultipleComponent]
     [AddComponentMenu("Newton Physics/Rigid Body")]
     public class NewtonBody : MonoBehaviour {
-        void Start() {
+        private void Awake() {
+            World = NewtonWorld.Current;
+
+            if (ReferenceEquals(World, null)) {
+                throw new NullReferenceException("Newton world is null.");
+            }
             var scripts = GetComponents<NewtonBodyScript>();
             foreach (var script in scripts) {
                 m_scripts.Add(script);
@@ -38,13 +43,18 @@ namespace Newton {
             InitRigidBody();
         }
 
-        public virtual void OnDestroy() {
-            //Debug.Log("body");
-            if (m_world != null)
-                m_world.UnregisterBody(this);
-
+        protected virtual void OnDestroy() {
             // Destroy native body
             DestroyRigidBody();
+        }
+
+        protected virtual void OnEnable() {
+            World.RegisterBody(this);
+        }
+
+        protected virtual void OnDisable() {
+            if (World != null)
+                World.DeregisterBody(this);
         }
 
         // Update is called once per frame
@@ -88,7 +98,6 @@ namespace Newton {
             var handle = GCHandle.Alloc(this);
             m_body.SetUserData(GCHandle.ToIntPtr(handle));
 
-            m_world.RegisterBody(this);
             initialized = true;
         }
 
@@ -112,7 +121,7 @@ namespace Newton {
         }
 
         public dNewtonBody GetBody() {
-            if (m_world.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
+            if (World.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
             if (!initialized) {
                 InitRigidBody();
             }
@@ -288,11 +297,12 @@ namespace Newton {
         protected virtual void CreateBodyAndCollision() {
             if (m_collision == null && m_body == null) {
                 m_collision = new NewtonBodyCollision(this);
-                m_body = new dNewtonDynamicBody(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+                m_body = new dNewtonDynamicBody(World.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
             }
         }
 
-        [Header("rigid body data")]
+        public NewtonWorld World { get; private set; }
+
         public float m_mass = 0.0f;
         public Vector3 m_centerOfMass = new Vector3(0.0f, 0.0f, 0.0f);
         public float m_Ixx = 0.0f;
@@ -302,11 +312,12 @@ namespace Newton {
         public bool m_isScene = false;
         public bool m_showGizmo = false;
         public float m_gizmoScale = 1.0f;
-        public NewtonWorld m_world;
         public Vector3 m_forceAcc { get; set; }
         public Vector3 m_torqueAcc { get; set; }
         public float m_linearDamping = 0.1f;
         public Vector3 m_angularDamping = new Vector3(0.1f, 0.1f, 0.1f);
+
+       
 
         internal dNewtonBody m_body = null;
         internal NewtonBodyCollision m_collision = null;

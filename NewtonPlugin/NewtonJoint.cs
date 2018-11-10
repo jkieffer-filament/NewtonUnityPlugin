@@ -46,16 +46,15 @@ namespace Newton {
             m_Joint.Destroy();
         }
 
-        [SerializeField]
         protected dNewtonJoint m_Joint = null;
+        protected bool m_Initialized = false;
+
         [SerializeField]
         protected NewtonBody m_OtherBody = null;
         [SerializeField]
         protected float m_Stiffness = 1.0f;
         [SerializeField]
         protected float m_GizmoScale = 1.0f;
-
-        protected bool m_Initialized = false;
     }
 }
 

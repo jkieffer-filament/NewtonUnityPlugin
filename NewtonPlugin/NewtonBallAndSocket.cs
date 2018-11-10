@@ -28,7 +28,7 @@ namespace Newton {
     public class NewtonBallAndSocket : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_posit, Quaternion.Euler(m_rotation));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
             m_Joint = new dNewtonJointBallAndSocket(matrix, child.GetBody().GetBody(), otherBody);
 
@@ -36,19 +36,18 @@ namespace Newton {
         }
 
         void OnDrawGizmosSelected() {
-            Matrix4x4 bodyMatrix = Matrix4x4.identity;
-            Matrix4x4 localMatrix = Matrix4x4.identity;
-            bodyMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
-            localMatrix.SetTRS(m_posit, Quaternion.Euler(m_rotation), Vector3.one);
+
 
             Gizmos.color = Color.red;
 
-            Gizmos.matrix = bodyMatrix;
-            Gizmos.DrawRay(m_posit, localMatrix.GetColumn(0) * m_GizmoScale);
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawRay(m_Pivot, m_Pin.normalized * m_GizmoScale);
         }
 
-        public Vector3 m_posit = Vector3.zero;
-        public Vector3 m_rotation = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pivot = Vector3.zero;
+        [SerializeField]
+        private Vector3 m_Pin = Vector3.right;
     }
 }
 

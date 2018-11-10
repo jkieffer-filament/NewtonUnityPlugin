@@ -150,7 +150,7 @@ xcopy  "$(NEWTON_DYNAMICS)\sdk\projects\visualStudio_2015_static_mt\x64\dgNewton
     <ClInclude Include="wrapperSdk\dNewtonJointHinge.h" />
     <ClInclude Include="wrapperSdk\dNewtonJointRelational.h" />
     <ClInclude Include="wrapperSdk\dNewtonJointSlider.h" />
-    <ClInclude Include="wrapperSdk\dNewtonJointSlidingHinge.h" />
+    <ClInclude Include="wrapperSdk\dNewtonJointCorkscrew.h" />
     <ClInclude Include="wrapperSdk\dNewtonJointDoubleHinge.h" />
     <ClInclude Include="wrapperSdk\dNewtonVehicle.h" />
     <ClInclude Include="wrapperSdk\dNewtonVehicleManager.h" />
@@ -182,7 +182,7 @@ xcopy  "$(NEWTON_DYNAMICS)\sdk\projects\visualStudio_2015_static_mt\x64\dgNewton
     <ClCompile Include="wrapperSdk\dNewtonJointHinge.cpp" />
     <ClCompile Include="wrapperSdk\dNewtonJointRelational.cpp" />
     <ClCompile Include="wrapperSdk\dNewtonJointSlider.cpp" />
-    <ClCompile Include="wrapperSdk\dNewtonJointSlidingHinge.cpp" />
+    <ClCompile Include="wrapperSdk\dNewtonJointCorkscrew.cpp" />
     <ClCompile Include="wrapperSdk\dNewtonJointDoubleHinge.cpp" />
     <ClCompile Include="wrapperSdk\dNewtonVehicle.cpp" />
     <ClCompile Include="wrapperSdk\dNewtonVehicleManager.cpp" />
