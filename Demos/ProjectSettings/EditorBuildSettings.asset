@@ -5,13 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/demo_04_HingeActuators_Connected.unity
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/demo_05_Robot.unity
-    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/demo_14_sceneCollision.unity
-    guid: 00000000000000000000000000000000
+    path: Assets/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects: {}
