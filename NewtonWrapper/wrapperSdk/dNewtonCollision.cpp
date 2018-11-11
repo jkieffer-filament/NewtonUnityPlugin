@@ -89,6 +89,10 @@ void dNewtonCollision::SetShape(NewtonCollision* const shape)
 	m_collisionCacheNode = m_myWorld->m_collisionCache.Append(this);
 }
 
+void* dNewtonCollision::GetShape() const {
+	return m_shape;
+}
+
 void dNewtonCollision::DebugRenderCallback(void* userData, int vertexCount, const dFloat* faceVertec, int id)
 {
 	DebugCallBack* const callbackInfo = (DebugCallBack*)userData;

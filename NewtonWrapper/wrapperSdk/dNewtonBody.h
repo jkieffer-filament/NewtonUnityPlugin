@@ -66,12 +66,13 @@ class dNewtonBody: public dAlloc
 	void* GetAngularDamping();
 	void SetAngularDamping(dFloat x, dFloat y, dFloat z);
 
-	void* GetMass();
+	dFloat GetMass();
 	void SetMass(dFloat mass);
 
 	void* GetCenterOfMass();
-	void SetCenterOfMass(float com_x, float com_y, float com_z, float Ixx, float Iyy, float Izz, bool Calc_inertia);
+	void SetCenterOfMass(dFloat com_x, dFloat com_y, dFloat com_z, dFloat Ixx, dFloat Iyy, dFloat Izz, bool Calc_inertia);
 	void CalculateBuoyancyForces(const void* plane, void* force, void* torque, float bodyDensity);
+	virtual void SetCollision(dNewtonCollision* const collision);
 
 	virtual void AddForce(dFloat x, dFloat y, dFloat z);
 	virtual void AddTorque(dFloat x, dFloat y, dFloat z);
@@ -118,6 +119,9 @@ class dNewtonKinematicBody : public dNewtonBody
 {
 	public:
 	dNewtonKinematicBody(dNewtonWorld* const world, dNewtonCollision* const collision, dMatrix matrix, dFloat mass);
+
+	private:
+	virtual void SetCollision(dNewtonCollision* const collision);
 };
 
 class dNewtonDynamicBody: public dNewtonBody
@@ -131,6 +135,8 @@ class dNewtonDynamicBody: public dNewtonBody
 
 	virtual void AddForce(dFloat x, dFloat y, dFloat z);
 	virtual void AddTorque(dFloat x, dFloat y, dFloat z);
+
+	virtual void SetCollision(dNewtonCollision* const collision);
 
 	dVector m_externalForce;
 	dVector m_externalTorque;

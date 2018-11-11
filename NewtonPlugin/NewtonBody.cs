@@ -69,7 +69,7 @@ namespace Newton {
 
         void OnDrawGizmosSelected() {
             if (m_showGizmo) {
-                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
 
                 Gizmos.color = Color.red;
                 Gizmos.DrawRay(m_centerOfMass, Vector3.right * m_gizmoScale);
@@ -88,7 +88,7 @@ namespace Newton {
 
             CreateBodyAndCollision();
 
-            SetCenterOfMass();
+            ResetCenterOfMass();
 
             m_body.SetLinearDamping(m_linearDamping);
             m_body.SetAngularDamping(m_angularDamping.x, m_angularDamping.y, m_angularDamping.z);
@@ -99,7 +99,7 @@ namespace Newton {
             initialized = true;
         }
 
-        void SetCenterOfMass() {
+        public void ResetCenterOfMass() {
             m_body.SetCenterOfMass(m_centerOfMass.x, m_centerOfMass.y, m_centerOfMass.z, m_Ixx, m_Iyy, m_Izz, m_CalculateInertia);
         }
 

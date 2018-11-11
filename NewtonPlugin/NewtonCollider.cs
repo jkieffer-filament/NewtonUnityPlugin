@@ -143,17 +143,22 @@ namespace Newton {
             shape.SetMatrix(matrix);
         }
 
+        private NewtonBody GetBodyInParent() {
+            NewtonBody body = null;
+            Transform gameTransform = transform;
+            while (gameTransform != null) {
+                // this is a child body we need to find the root rigid body owning the shape
+                if (body == null) {
+                    body = gameTransform.gameObject.GetComponent<NewtonBody>();
+                }
+                gameTransform = gameTransform.parent;
+            }
+            return body;
+        }
+
         private void ValidateEditorShape() {
             if (m_editorShape == null) {
-                NewtonBody body = null;
-                Transform gameTransform = transform;
-                while (gameTransform != null) {
-                    // this is a child body we need to find the root rigid body owning the shape
-                    if (body == null) {
-                        body = gameTransform.gameObject.GetComponent<NewtonBody>();
-                    }
-                    gameTransform = gameTransform.parent;
-                }
+                NewtonBody body = GetBodyInParent();
 
                 if (body != null) {
                     if (body.World != null) {
@@ -163,6 +168,40 @@ namespace Newton {
             }
         }
 
+        private void OnTransformParentChanged() {
+            var newBody = GetBodyInParent();
+
+            if (!ReferenceEquals(newBody, Body)) {
+                if (!ReferenceEquals(Body, null)) {
+                    Body.m_collision.RemoveCollider(this);
+                }
+
+                Body = newBody;
+
+                if (!ReferenceEquals(Body, null)) {
+                    Body.m_collision.AddCollider(this);
+                }
+            }
+        }
+
+        internal dNewtonCollision GetShape() {
+            return m_Shape;
+        }
+
+        internal void SetShape(dNewtonCollision shape) {
+            m_Shape = shape;
+        }
+
+        internal void DestroyShape() {
+            m_Shape.Dispose();
+            m_Shape = null;
+        }
+
+        public NewtonBody Body { get; internal set; }
+
+        
+
+        private dNewtonCollision m_Shape;
         private dNewtonCollision m_editorShape = null;
         public NewtonMaterial m_material = null;
         public LayerMask m_layer;
@@ -172,6 +211,8 @@ namespace Newton {
         public bool m_isTrigger = false;
         public bool m_showGizmo = true;
         public bool m_inheritTransformScale = true;
+
+        internal IntPtr m_ParentHandle;
 
         // Reuse the same buffer for debug display
         static Vector3 m_lineP0 = Vector3.zero;

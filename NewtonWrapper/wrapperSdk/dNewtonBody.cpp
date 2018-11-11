@@ -150,7 +150,7 @@ void dNewtonBody::SetOmega(dFloat x, dFloat y, dFloat z)
 	NewtonBodySetOmega(m_body, &omg.m_x);
 }
 
-float dNewtonBody::GetLinearDamping()
+dFloat dNewtonBody::GetLinearDamping()
 {
 	return NewtonBodyGetLinearDamping(m_body);
 }
@@ -172,7 +172,7 @@ void dNewtonBody::SetAngularDamping(dFloat x, dFloat y, dFloat z)
 	NewtonBodySetAngularDamping(m_body, &damp.m_x);
 }
 
-void* dNewtonBody::GetMass() {
+dFloat dNewtonBody::GetMass() {
 	dFloat tmp_Ixx;
 	dFloat tmp_Iyy;
 	dFloat tmp_Izz;
@@ -180,7 +180,7 @@ void* dNewtonBody::GetMass() {
 
 	NewtonBodyGetMass(m_body, &mass, &tmp_Ixx, &tmp_Iyy, &tmp_Izz);
 
-	return &mass;
+	return mass;
 }
 
 void dNewtonBody::SetMass(dFloat mass) {
@@ -199,7 +199,7 @@ void* dNewtonBody::GetCenterOfMass()
 	return &m_com;
 }
 
-void dNewtonBody::SetCenterOfMass(float com_x, float com_y, float com_z, float Ixx, float Iyy, float Izz, bool Calc_inertia)
+void dNewtonBody::SetCenterOfMass(dFloat com_x, dFloat com_y, dFloat com_z, dFloat Ixx, dFloat Iyy, dFloat Izz, bool Calc_inertia)
 {
 	dVector com;
 	dFloat tmp_Ixx;
@@ -210,7 +210,7 @@ void dNewtonBody::SetCenterOfMass(float com_x, float com_y, float com_z, float I
 	NewtonBodyGetMass(m_body, &mass, &tmp_Ixx, &tmp_Iyy, &tmp_Izz);
 	NewtonCollision* const collision = NewtonBodyGetCollision(m_body);
 	if (Calc_inertia) {
-		NewtonBodySetMassProperties(m_body, mass, NewtonBodyGetCollision(m_body));
+		NewtonBodySetMassProperties(m_body, mass, collision);
 		NewtonBodyGetCentreOfMass(m_body, &com[0]);
 	}
 	else {
@@ -268,6 +268,9 @@ void dNewtonBody::CalculateBuoyancyForces(const void* plane, void* force, void* 
 		((float*)torque)[1] = finalTorque.m_y;
 		((float*)torque)[2] = finalTorque.m_z;
 	}
+}
+
+void dNewtonBody::SetCollision(dNewtonCollision* const collision) {
 }
 
 void dNewtonBody::OnBodyTransform(const dFloat* const matrixPtr, int threadIndex)
@@ -338,6 +341,8 @@ void dNewtonBody::AddTorque(dFloat x, dFloat y, dFloat z)
 {
 }
 
+
+
 dNewtonKinematicBody::dNewtonKinematicBody(dNewtonWorld* const world, dNewtonCollision* const collision, dMatrix matrix, dFloat mass)
 	:dNewtonBody(matrix)
 {
@@ -345,14 +350,18 @@ dNewtonKinematicBody::dNewtonKinematicBody(dNewtonWorld* const world, dNewtonCol
 	NewtonWaitForUpdateToFinish(newton);
 
 	m_body = NewtonCreateDynamicBody(newton, collision->m_shape, &matrix[0][0]);
-	collision->DeleteShape();
-	collision->SetShape(NewtonBodyGetCollision(m_body));
+	//collision->DeleteShape();
+	//collision->SetShape(NewtonBodyGetCollision(m_body));
 
 	NewtonBodySetMassProperties(m_body, mass, NewtonBodyGetCollision(m_body));
 
 	NewtonBodySetUserData(m_body, this);
 	NewtonBodySetTransformCallback(m_body, OnBodyTransformCallback);
 	NewtonBodySetForceAndTorqueCallback(m_body, OnForceAndTorqueCallback);
+}
+
+void dNewtonKinematicBody::SetCollision(dNewtonCollision* const collision) {
+	NewtonBodySetCollision(m_body, collision->m_shape);
 }
 
 dNewtonDynamicBody::dNewtonDynamicBody(dNewtonWorld* const world, dNewtonCollision* const collision, dMatrix matrix, dFloat mass)
@@ -403,5 +412,10 @@ void dNewtonDynamicBody::AddTorque(dFloat x, dFloat y, dFloat z)
 {
 	m_externalTorque += dVector(x, y, z);
 }
+
+void dNewtonDynamicBody::SetCollision(dNewtonCollision* const collision) {
+	NewtonBodySetCollision(m_body, collision->m_shape);
+}
+
 
 

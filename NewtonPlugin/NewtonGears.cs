@@ -31,7 +31,7 @@ namespace Newton {
             Vector3 parentPin = m_ParentPin.normalized;
 
             NewtonBody child = GetComponent<NewtonBody>();
-            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
 
             dVector childPin_ = new dVector(childPin.x, childPin.y, childPin.z, 0.0f);
             dVector parentPin_ = new dVector(parentPin.x, parentPin.y, parentPin.z, 0.0f);
@@ -40,11 +40,11 @@ namespace Newton {
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.cyan;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             Gizmos.DrawRay(Vector3.zero, m_Pin.normalized * m_GizmoScale);
             if (m_OtherBody != null) {
                 Gizmos.color = Color.cyan;
-                Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+                Gizmos.matrix = Matrix4x4.TRS( m_OtherBody.transform.position,  m_OtherBody.transform.rotation, Vector3.one);
                 Gizmos.DrawRay(Vector3.zero, m_ParentPin * m_GizmoScale);
             }
         }
@@ -66,8 +66,8 @@ namespace Newton {
             var refPinNorm = m_ReferencePin.normalized;
 
             NewtonBody child = GetComponent<NewtonBody>();
-            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
-            IntPtr referenceBody = (m_ReferenceBody != null) ? m_ReferenceBody.GetBody().GetBody() : new IntPtr(0);
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
+            IntPtr referenceBody = (m_ReferenceBody != null) ? m_ReferenceBody.GetBody().GetBody() : IntPtr.Zero;
 
             dVector dChildPin = new dVector(childPinNorm.x, childPinNorm.y, childPinNorm.z, 0.0f);
             dVector dParentPin = new dVector(parentPinNorm.x, parentPinNorm.y, parentPinNorm.z, 0.0f);
@@ -78,17 +78,17 @@ namespace Newton {
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.cyan;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             Gizmos.DrawRay(Vector3.zero, m_Pin.normalized * m_GizmoScale);
             if (m_OtherBody != null) {
                 Gizmos.color = Color.cyan;
-                Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+                Gizmos.matrix = Matrix4x4.TRS( m_OtherBody.transform.position,  m_OtherBody.transform.rotation, Vector3.one);
                 Gizmos.DrawRay(Vector3.zero, m_ParentPin.normalized * m_GizmoScale);
             }
 
             if (m_ReferenceBody != null) {
                 Gizmos.color = Color.yellow;
-                Gizmos.matrix = m_ReferenceBody.transform.localToWorldMatrix;
+                Gizmos.matrix = Matrix4x4.TRS( m_ReferenceBody.transform.position,  m_ReferenceBody.transform.rotation, Vector3.one);
                 Gizmos.DrawRay(Vector3.zero, m_ReferencePin.normalized * m_GizmoScale);
             }
         }
@@ -109,7 +109,7 @@ namespace Newton {
     public class NewtonRackAndPinion : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
 
             var gearPinNorm = m_GearPin.normalized;
             var slidePinNorm = m_SlidePin.normalized;
@@ -121,11 +121,11 @@ namespace Newton {
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.cyan;
-            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             Gizmos.DrawRay(Vector3.zero, m_GearPin.normalized * m_GizmoScale);
             if (m_OtherBody != null) {
                 Gizmos.color = Color.cyan;
-                Gizmos.matrix = m_OtherBody.transform.localToWorldMatrix;
+                Gizmos.matrix = Matrix4x4.TRS( m_OtherBody.transform.position,  m_OtherBody.transform.rotation, Vector3.one);
                 Gizmos.DrawRay(Vector3.zero, m_SlidePin.normalized * m_GizmoScale);
             }
         }

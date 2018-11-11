@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 4919333657854726}
   - component: {fileID: 33242743648762920}
   - component: {fileID: 23471918718686500}
+  - component: {fileID: 114203320406203790}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -55,6 +56,7 @@ GameObject:
   - component: {fileID: 4589096809640252}
   - component: {fileID: 33864128730175084}
   - component: {fileID: 23982200853361064}
+  - component: {fileID: 114133712700962168}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -210,6 +212,52 @@ MonoBehaviour:
   m_SpringDamperForceMixing: 0.9
   m_SpringConstant: 0
   m_DamperConstant: 10
+--- !u!114 &114133712700962168
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1677114924642748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1562967349, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_material: {fileID: 0}
+  m_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  m_posit: {x: 0, y: 0, z: 0}
+  m_rotation: {x: 0, y: 0, z: 0}
+  m_scale: {x: 1, y: 1, z: 1}
+  m_isTrigger: 0
+  m_showGizmo: 1
+  m_inheritTransformScale: 1
+  m_size: {x: 1, y: 1, z: 1}
+--- !u!114 &114203320406203790
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1307367027713390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -359881765, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_material: {fileID: 0}
+  m_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  m_posit: {x: 0, y: 0, z: 0}
+  m_rotation: {x: 0, y: 0, z: 0}
+  m_scale: {x: 1, y: 1, z: 1}
+  m_isTrigger: 0
+  m_showGizmo: 1
+  m_inheritTransformScale: 1
+  m_radius0: 0.5
+  m_radius1: 0.5
+  m_height: 2
 --- !u!114 &114894634540640650
 MonoBehaviour:
   m_ObjectHideFlags: 1

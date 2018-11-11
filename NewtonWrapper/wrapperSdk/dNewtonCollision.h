@@ -35,6 +35,7 @@ class dNewtonCollision: public dAlloc
 	dNewtonCollision (dNewtonWorld* const world, dLong collisionMask);
 	virtual ~dNewtonCollision();
 
+	void* GetShape() const;
 	virtual bool IsValid();
 	virtual void SetAsTrigger(bool mode);
 	virtual void SetScale(dFloat x, dFloat y, dFloat z);

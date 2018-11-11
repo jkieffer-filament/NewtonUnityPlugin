@@ -30,7 +30,7 @@ namespace Newton {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
             dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
-            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
             m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
@@ -41,7 +41,7 @@ namespace Newton {
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
 
-            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             Gizmos.DrawRay(m_Pivot, m_Pin.normalized * m_GizmoScale);
             if (m_EnableLimits) {
                 // draw hinge limit
@@ -165,7 +165,7 @@ namespace Newton {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
             dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
-            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : new IntPtr(0);
+            IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
             m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
 
             Speed = m_Speed;
@@ -177,7 +177,7 @@ namespace Newton {
 
             Gizmos.color = Color.red;
 
-            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             Gizmos.DrawRay(m_Pivot, m_Pin.normalized * m_GizmoScale);
         }
 

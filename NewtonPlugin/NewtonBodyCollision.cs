@@ -20,6 +20,7 @@
 
 using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Newton.Internal;
@@ -34,71 +35,72 @@ namespace Newton {
         public NewtonBodyCollision(NewtonBody body) {
             if (body.World.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
 
-            List<ColliderShapePair> colliderList = new List<ColliderShapePair>();
+            m_Body = body;
+
+            List<NewtonCollider> colliderList = new List<NewtonCollider>();
             TraverseColliders(body.gameObject, colliderList, body.gameObject, body);
 
             if (body.m_isScene) {
-                m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
                 NewtonSceneCollider sceneCollider = body.gameObject.AddComponent<NewtonSceneCollider>();
                 dNewtonCollisionScene sceneShape = (dNewtonCollisionScene)sceneCollider.Create(body.World);
+                sceneCollider.SetShape(sceneShape);
 
-                m_collidersArray[0].m_shape = sceneShape;
-                m_collidersArray[0].m_collider = sceneCollider;
+                m_RootCollider = sceneCollider;
+                m_Colliders.Add(sceneCollider);
 
-                int index = 1;
                 sceneShape.BeginAddRemoveCollision();
-                foreach (ColliderShapePair pair in colliderList) {
-                    m_collidersArray[index] = pair;
-                    sceneShape.AddCollision(pair.m_shape);
-                    index++;
+                foreach (NewtonCollider collider in colliderList) {
+                    m_Colliders.Add(collider);
+                    collider.m_ParentHandle = sceneShape.AddCollision(collider.GetShape());
                 }
                 sceneShape.EndAddRemoveCollision();
             } else if (colliderList.Count == 0) {
-                m_collidersArray = new ColliderShapePair[1];
                 NewtonCollider collider = body.gameObject.AddComponent<NewtonNullCollider>();
-                m_collidersArray[0].m_collider = collider;
-                m_collidersArray[0].m_shape = collider.Create(body.World);
+                collider.SetShape(collider.Create(body.World));
+
+                m_RootCollider = collider;
+                m_Colliders.Add(collider);
             } else if (colliderList.Count == 1) {
-                m_collidersArray = new ColliderShapePair[1];
-                m_collidersArray[0] = colliderList[0];
+                m_RootCollider = colliderList[0];
+                m_Colliders.Add(colliderList[0]);
             } else {
-                m_collidersArray = new ColliderShapePair[colliderList.Count + 1];
+
                 NewtonCompoundCollider compoundCollider = body.gameObject.AddComponent<NewtonCompoundCollider>();
                 dNewtonCollisionCompound compoundShape = (dNewtonCollisionCompound)compoundCollider.Create(body.World);
+                compoundCollider.SetShape(compoundShape);
 
-                m_collidersArray[0].m_shape = compoundShape;
-                m_collidersArray[0].m_collider = compoundCollider;
+                m_RootCollider = compoundCollider;
+                m_Colliders.Add(compoundCollider);
 
-                int index = 1;
                 compoundShape.BeginAddRemoveCollision();
-                foreach (ColliderShapePair pair in colliderList) {
-                    m_collidersArray[index] = pair;
-                    compoundShape.AddCollision(pair.m_shape);
-                    index++;
+                foreach (NewtonCollider collider in colliderList) {
+                    m_Colliders.Add(collider);
+                    collider.m_ParentHandle = compoundShape.AddCollision(collider.GetShape());
                 }
                 compoundShape.EndAddRemoveCollision();
             }
         }
 
         public void Destroy() {
-            for (int i = 0; i < m_collidersArray.Length; i++) {
-                m_collidersArray[i].m_shape.Dispose();
-                m_collidersArray[i].m_shape = null;
-                m_collidersArray[i].m_collider = null;
+            m_Body = null;
+
+            m_RootCollider = null;
+            foreach (var collider in m_Colliders) {
+                collider.DestroyShape();
             }
+            m_Colliders.Clear();
         }
 
-        private void TraverseColliders(GameObject gameObject, List<ColliderShapePair> colliderList, GameObject rootObject, NewtonBody body) {
+        private void TraverseColliders(GameObject gameObject, List<NewtonCollider> colliderList, GameObject rootObject, NewtonBody body) {
             // Don't fetch colliders from children with NewtonBodies
             if ((gameObject == rootObject) || (gameObject.GetComponent<NewtonBody>() == null)) {
                 //Fetch all colliders
                 foreach (NewtonCollider collider in gameObject.GetComponents<NewtonCollider>()) {
                     dNewtonCollision shape = collider.CreateBodyShape(body.World);
                     if (shape != null) {
-                        ColliderShapePair pair;
-                        pair.m_collider = collider;
-                        pair.m_shape = shape;
-                        colliderList.Add(pair);
+                        collider.Body = body;
+                        collider.SetShape(shape);
+                        colliderList.Add(collider);
                     }
                 }
 
@@ -125,15 +127,14 @@ namespace Newton {
                             foreach (NewtonCollider treeCollider in treeGameObject.GetComponents<NewtonCollider>()) {
                                 dNewtonCollision treeShape = treeCollider.CreateBodyShape(body.World);
                                 if (treeShape != null) {
-                                    ColliderShapePair pair;
                                     Vector3 treePosit = terrain.transform.position + treeCollider.m_posit + posit;
                                     //Debug.Log("xxx1 " + treePosit);
                                     dMatrix matrix = Utils.ToMatrix(treePosit, Quaternion.identity);
                                     treeShape.SetMatrix(matrix);
 
-                                    pair.m_collider = treeCollider;
-                                    pair.m_shape = treeShape;
-                                    colliderList.Add(pair);
+                                    treeCollider.Body = body;
+                                    treeCollider.SetShape(treeShape);
+                                    colliderList.Add(treeCollider);
                                 }
                             }
                         }
@@ -147,11 +148,118 @@ namespace Newton {
             }
         }
 
-        public dNewtonCollision GetShape() {
-            return m_collidersArray[0].m_shape;
+        public void AddCollider(NewtonCollider collider) {
+
+            if (collider.GetShape() == null) {
+                throw new NullReferenceException("Can not add collider with null shape.");
+            }
+
+            bool success = m_Colliders.Add(collider);
+
+            if (success) {
+                if (m_Body.m_isScene) {
+                    var sceneShape = (dNewtonCollisionScene)GetShape();
+
+                    sceneShape.BeginAddRemoveCollision();
+                    sceneShape.AddCollision(collider.GetShape());
+                    sceneShape.EndAddRemoveCollision();
+                } else if (m_RootCollider is NewtonNullCollider) {
+                    m_Body.GetBody().SetCollision(collider.GetShape());
+
+                    m_RootCollider.DestroyShape();
+                    m_Colliders.Remove(m_RootCollider);
+                    Component.Destroy(m_RootCollider);
+
+                    m_RootCollider = collider;
+                   
+                } else if (m_RootCollider is NewtonCompoundCollider) {
+                    var compoundShape = (dNewtonCollisionCompound)GetShape();
+
+                    compoundShape.BeginAddRemoveCollision();
+                    collider.m_ParentHandle = compoundShape.AddCollision(collider.GetShape());
+                    compoundShape.EndAddRemoveCollision();
+                } else {
+
+                    NewtonCompoundCollider compoundCollider = m_Body.gameObject.AddComponent<NewtonCompoundCollider>();
+                    dNewtonCollisionCompound compoundShape = (dNewtonCollisionCompound)compoundCollider.Create(m_Body.World);
+                    compoundCollider.SetShape(compoundShape);
+
+                    m_Colliders.Add(compoundCollider);
+
+                    compoundShape.BeginAddRemoveCollision();
+                    m_RootCollider.m_ParentHandle = compoundShape.AddCollision(m_RootCollider.GetShape());
+                    collider.m_ParentHandle = compoundShape.AddCollision(collider.GetShape());
+                    compoundShape.EndAddRemoveCollision();
+
+                    m_RootCollider = compoundCollider;
+                    m_Body.GetBody().SetCollision(compoundShape);
+                }
+
+                m_Body.ResetCenterOfMass();
+            }
+
         }
 
-        private ColliderShapePair[] m_collidersArray;
+        public void RemoveCollider(NewtonCollider collider) {
+
+            if (ReferenceEquals(collider, m_RootCollider) && (collider is NewtonNullCollider || collider is NewtonCompoundCollider || collider is NewtonSceneCollider)) {
+                throw new NullReferenceException(string.Format("Can not remove root collider of type {0}.", collider.GetType().Name));
+            }
+
+            bool success = m_Colliders.Remove(collider);
+
+            if (success) {
+                if (m_Body.m_isScene) {
+                    var sceneShape = (dNewtonCollisionScene)GetShape();
+
+                    sceneShape.BeginAddRemoveCollision();
+                    sceneShape.RemoveCollision(collider.m_ParentHandle);
+                    collider.m_ParentHandle = IntPtr.Zero;
+                    sceneShape.EndAddRemoveCollision();
+
+                } else if (m_Colliders.Count == 0) {
+
+                    NewtonCollider nullCollider = m_Body.gameObject.AddComponent<NewtonNullCollider>();
+                    dNewtonCollision nullShape = nullCollider.Create(m_Body.World);
+                    nullCollider.SetShape(nullShape);
+
+                    m_RootCollider = nullCollider;
+                    m_Colliders.Add(nullCollider);
+
+                    m_Body.GetBody().SetCollision(nullShape);
+                } else {
+                    if (m_Colliders.Count == 2) {
+                        m_Body.GetBody().SetCollision(collider.GetShape());
+
+                        m_RootCollider.DestroyShape();
+                        m_Colliders.Remove(m_RootCollider);
+                        Component.Destroy(m_RootCollider);
+
+
+                        m_RootCollider = m_Colliders.First();
+
+                    } else {
+                        var compoundShape = (dNewtonCollisionCompound)GetShape();
+
+                        compoundShape.BeginAddRemoveCollision();
+                        compoundShape.RemoveCollision(collider.m_ParentHandle);
+                        collider.m_ParentHandle = IntPtr.Zero;
+                        compoundShape.EndAddRemoveCollision();
+                    }
+                }
+            
+
+                 m_Body.ResetCenterOfMass();
+            }
+        }
+
+        public dNewtonCollision GetShape() {
+            return m_RootCollider.GetShape();
+        }
+
+        private NewtonBody m_Body;
+        private NewtonCollider m_RootCollider;
+        private HashSet<NewtonCollider> m_Colliders = new HashSet<NewtonCollider>();
     }
 }
 

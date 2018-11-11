@@ -43,7 +43,9 @@ namespace Newton {
         }
 
         void OnDestroy() {
-            m_Joint.Destroy();
+            if (m_Joint != null) {
+                m_Joint.Destroy();
+            }
         }
 
         protected dNewtonJoint m_Joint = null;
