@@ -63,8 +63,7 @@ namespace Newton {
             IntPtr rotationPtr = m_body.GetInterpolatedRotation();
             Marshal.Copy(positionPtr, m_positionPtr, 0, 3);
             Marshal.Copy(rotationPtr, m_rotationPtr, 0, 4);
-            transform.position = new Vector3(m_positionPtr[0], m_positionPtr[1], m_positionPtr[2]);
-            transform.rotation = new Quaternion(m_rotationPtr[1], m_rotationPtr[2], m_rotationPtr[3], m_rotationPtr[0]);
+            transform.SetPositionAndRotation(new Vector3(m_positionPtr[0], m_positionPtr[1], m_positionPtr[2]), new Quaternion(m_rotationPtr[1], m_rotationPtr[2], m_rotationPtr[3], m_rotationPtr[0]));
         }
 
         void OnDrawGizmosSelected() {
