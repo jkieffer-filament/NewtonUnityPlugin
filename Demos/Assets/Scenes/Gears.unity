@@ -933,7 +933,7 @@ MonoBehaviour:
   m_GizmoScale: 1
   m_GearPin: {x: 0, y: 0, z: 1}
   m_SlidePin: {x: 0, y: -1, z: 0}
-  m_GearRatio: 1
+  m_GearRatio: 0.5
 --- !u!114 &860304693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1136,7 +1136,7 @@ TextMesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1126516140}
-  m_Text: 'Torque: 200'
+  m_Text: 'Torque: 100'
   m_OffsetZ: 0
   m_CharacterSize: 0.1
   m_LineSpacing: 1
@@ -1352,7 +1352,7 @@ MonoBehaviour:
   m_GizmoScale: 1
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Pin: {x: 0, y: 0, z: 1}
-  m_MaxTorque: 200
+  m_MaxTorque: 100
   m_AngularRate: -100
   m_TargetAngle: Infinity
   m_MinAngle: -Infinity
