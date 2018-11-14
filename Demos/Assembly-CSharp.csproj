@@ -57,9 +57,6 @@
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/jkieffer.FILAMENT/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Analytics.Android.Editor">
- <HintPath>C:/Users/jkieffer.FILAMENT/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.Analytics.Android.Editor.dll</HintPath>
- </Reference>
  <Reference Include="Unity.TextMeshPro">
  <HintPath>C:/Users/jkieffer.FILAMENT/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
@@ -260,18 +257,6 @@
  </Reference>
  <Reference Include="NewtonPlugin">
  <HintPath>C:/Users/jkieffer.FILAMENT/Documents/Repos/NewtonUnityPlugin/Demos/Assets/Plugins/NewtonPlugin.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.Editor">
- <HintPath>C:/Users/jkieffer.FILAMENT/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@3.0.9/Unity.Analytics.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.StandardEvents">
- <HintPath>C:/Users/jkieffer.FILAMENT/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@3.0.9/Unity.Analytics.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.Tracker">
- <HintPath>C:/Users/jkieffer.FILAMENT/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@3.0.9/Unity.Analytics.Tracker.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics">
- <HintPath>C:/Users/jkieffer.FILAMENT/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@3.0.9/Android/Unity.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.0f2/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
