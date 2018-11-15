@@ -2682,7 +2682,7 @@ MonoBehaviour:
   m_SubSteps: 2
   m_PluginsOptions: 2
   m_Gravity: {x: 0, y: -9.8, z: 0}
-  m_DefaultRestitution: 0.4
+  m_DefaultRestitution: 0.2
   m_DefaultStaticFriction: 0.8
   m_DefaultKineticFriction: 0.6
 --- !u!4 &1128207611
