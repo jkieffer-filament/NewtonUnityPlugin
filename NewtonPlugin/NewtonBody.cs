@@ -30,6 +30,7 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Rigid Body")]
     public class NewtonBody : MonoBehaviour {
         private void Awake() {
+            m_CachedTransform = transform;
             World = NewtonWorld.Current;
 
             if (ReferenceEquals(World, null)) {
@@ -59,25 +60,28 @@ namespace Newton {
 
         // Update is called once per frame
         public virtual void OnUpdateTranform() {
-            IntPtr positionPtr = m_body.GetInterpolatedPosition();
-            IntPtr rotationPtr = m_body.GetInterpolatedRotation();
-            Marshal.Copy(positionPtr, m_positionPtr, 0, 3);
-            Marshal.Copy(rotationPtr, m_rotationPtr, 0, 4);
-            transform.SetPositionAndRotation(new Vector3(m_positionPtr[0], m_positionPtr[1], m_positionPtr[2]), new Quaternion(m_rotationPtr[1], m_rotationPtr[2], m_rotationPtr[3], m_rotationPtr[0]));
+            if (!m_Body.GetSleepState()) {
+                IntPtr positionPtr = m_Body.GetInterpolatedPosition();
+                IntPtr rotationPtr = m_Body.GetInterpolatedRotation();
+                Marshal.Copy(positionPtr, m_PositionPtr, 0, 3);
+                Marshal.Copy(rotationPtr, m_RotationPtr, 0, 4);
+                m_CachedTransform.SetPositionAndRotation(new Vector3(m_PositionPtr[0], m_PositionPtr[1], m_PositionPtr[2]), new Quaternion(m_RotationPtr[1], m_RotationPtr[2], m_RotationPtr[3], m_RotationPtr[0]));
+
+            }
         }
 
         void OnDrawGizmosSelected() {
-            if (m_showGizmo) {
+            if (m_ShowGizmo) {
                 Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
 
                 Gizmos.color = Color.red;
-                Gizmos.DrawRay(m_centerOfMass, Vector3.right * m_gizmoScale);
+                Gizmos.DrawRay(m_CenterOfMass, Vector3.right * m_GizmoScale);
 
                 Gizmos.color = Color.green;
-                Gizmos.DrawRay(m_centerOfMass, Vector3.up * m_gizmoScale);
+                Gizmos.DrawRay(m_CenterOfMass, Vector3.up * m_GizmoScale);
 
                 Gizmos.color = Color.blue;
-                Gizmos.DrawRay(m_centerOfMass, Vector3.forward * m_gizmoScale);
+                Gizmos.DrawRay(m_CenterOfMass, Vector3.forward * m_GizmoScale);
             }
         }
 
@@ -89,31 +93,31 @@ namespace Newton {
 
             ResetCenterOfMass();
 
-            m_body.SetLinearDamping(m_linearDamping);
-            m_body.SetAngularDamping(m_angularDamping.x, m_angularDamping.y, m_angularDamping.z);
+            m_Body.SetLinearDamping(m_LinearDamping);
+            m_Body.SetAngularDamping(m_AngularDamping.x, m_AngularDamping.y, m_AngularDamping.z);
 
             var handle = GCHandle.Alloc(this);
-            m_body.SetUserData(GCHandle.ToIntPtr(handle));
+            m_Body.SetUserData(GCHandle.ToIntPtr(handle));
 
             initialized = true;
         }
 
         public void ResetCenterOfMass() {
-            m_body.SetCenterOfMass(m_centerOfMass.x, m_centerOfMass.y, m_centerOfMass.z, m_Ixx, m_Iyy, m_Izz, m_CalculateInertia);
+            m_Body.SetCenterOfMass(m_CenterOfMass.x, m_CenterOfMass.y, m_CenterOfMass.z, m_Ixx, m_Iyy, m_Izz, m_CalculateInertia);
         }
 
         public virtual void DestroyRigidBody() {
-            if (m_body != null) {
-                var handle = GCHandle.FromIntPtr(m_body.GetUserData());
+            if (m_Body != null) {
+                var handle = GCHandle.FromIntPtr(m_Body.GetUserData());
                 handle.Free();
 
-                m_body.Dispose();
-                m_body = null;
+                m_Body.Dispose();
+                m_Body = null;
             }
 
-            if (m_collision != null) {
-                m_collision.Destroy();
-                m_collision = null;
+            if (m_Collision != null) {
+                m_Collision.Destroy();
+                m_Collision = null;
             }
         }
 
@@ -122,18 +126,18 @@ namespace Newton {
             if (!initialized) {
                 InitRigidBody();
             }
-            return m_body;
+            return m_Body;
         }
 
         public void CalculateBuoyancyForces(Vector4 plane, ref Vector3 force, ref Vector3 torque, float bodyDensity) {
-            if (m_body != null) {
+            if (m_Body != null) {
                 IntPtr planePtr = Marshal.AllocHGlobal(Marshal.SizeOf(plane));
                 IntPtr forcePtr = Marshal.AllocHGlobal(Marshal.SizeOf(force));
                 IntPtr torquePtr = Marshal.AllocHGlobal(Marshal.SizeOf(torque));
 
                 Marshal.StructureToPtr(plane, planePtr, false);
 
-                m_body.CalculateBuoyancyForces(planePtr, forcePtr, torquePtr, bodyDensity);
+                m_Body.CalculateBuoyancyForces(planePtr, forcePtr, torquePtr, bodyDensity);
 
                 force = (Vector3)Marshal.PtrToStructure(forcePtr, typeof(Vector3));
                 torque = (Vector3)Marshal.PtrToStructure(torquePtr, typeof(Vector3));
@@ -146,25 +150,29 @@ namespace Newton {
 
         public void ApplyExternaForces() {
             // Apply force & torque accumulators
-            m_body.AddForce(m_forceAcc.x, m_forceAcc.y, m_forceAcc.z);
-            m_body.AddTorque(m_torqueAcc.x, m_torqueAcc.y, m_torqueAcc.z);
-            m_forceAcc = Vector3.zero;
-            m_torqueAcc = Vector3.zero;
+            if (m_ForceAcc.sqrMagnitude > 0) {
+                m_Body.AddForce(m_ForceAcc.x, m_ForceAcc.y, m_ForceAcc.z);
+            }
+            if (m_TorqueAcc.sqrMagnitude > 0) {
+                m_Body.AddTorque(m_TorqueAcc.x, m_TorqueAcc.y, m_TorqueAcc.z);
+            }
+            m_ForceAcc = Vector3.zero;
+            m_TorqueAcc = Vector3.zero;
         }
 
         public Vector3 Position {
             get {
-                if (m_body != null) {
-                    IntPtr positionPtr = m_body.GetPosition();
-                    Marshal.Copy(positionPtr, m_positionPtr, 0, 3);
-                    return new Vector3(m_positionPtr[0], m_positionPtr[1], m_positionPtr[2]);
+                if (m_Body != null) {
+                    IntPtr positionPtr = m_Body.GetPosition();
+                    Marshal.Copy(positionPtr, m_PositionPtr, 0, 3);
+                    return new Vector3(m_PositionPtr[0], m_PositionPtr[1], m_PositionPtr[2]);
                 }
                 return Vector3.zero;
             }
 
             set {
-                if (m_body != null) {
-                    m_body.SetPosition(value.x, value.y, value.z);
+                if (m_Body != null) {
+                    m_Body.SetPosition(value.x, value.y, value.z);
                 }
             }
 
@@ -172,34 +180,34 @@ namespace Newton {
 
         public Quaternion Rotation {
             get {
-                if (m_body != null) {
-                    IntPtr rotationPtr = m_body.GetRotation();
-                    Marshal.Copy(rotationPtr, m_rotationPtr, 0, 4);
-                    return new Quaternion(m_rotationPtr[1], m_rotationPtr[2], m_rotationPtr[3], m_rotationPtr[0]);
+                if (m_Body != null) {
+                    IntPtr rotationPtr = m_Body.GetRotation();
+                    Marshal.Copy(rotationPtr, m_RotationPtr, 0, 4);
+                    return new Quaternion(m_RotationPtr[1], m_RotationPtr[2], m_RotationPtr[3], m_RotationPtr[0]);
                 }
                 return Quaternion.identity;
             }
 
             set {
-                if (m_body != null) {
-                    m_body.SetRotation(value.z, value.w, value.x, value.y);
+                if (m_Body != null) {
+                    m_Body.SetRotation(value.z, value.w, value.x, value.y);
                 }
             }
         }
 
         public Vector3 Velocity {
             get {
-                if (m_body != null) {
-                    IntPtr velPtr = m_body.GetVelocity();
-                    Marshal.Copy(velPtr, m_vec3Ptr, 0, 3);
-                    return new Vector3(m_vec3Ptr[0], m_vec3Ptr[1], m_vec3Ptr[2]);
+                if (m_Body != null) {
+                    IntPtr velPtr = m_Body.GetVelocity();
+                    Marshal.Copy(velPtr, m_Vec3Ptr, 0, 3);
+                    return new Vector3(m_Vec3Ptr[0], m_Vec3Ptr[1], m_Vec3Ptr[2]);
                 }
                 return Vector3.zero;
             }
 
             set {
-                if (m_body != null) {
-                    m_body.SetVelocity(value.x, value.y, value.z);
+                if (m_Body != null) {
+                    m_Body.SetVelocity(value.x, value.y, value.z);
                 }
             }
 
@@ -207,45 +215,45 @@ namespace Newton {
 
         public Vector3 Omega {
             get {
-                if (m_body != null) {
-                    IntPtr omgPtr = m_body.GetOmega();
-                    Marshal.Copy(omgPtr, m_vec3Ptr, 0, 3);
-                    return new Vector3(m_vec3Ptr[0], m_vec3Ptr[1], m_vec3Ptr[2]);
+                if (m_Body != null) {
+                    IntPtr omgPtr = m_Body.GetOmega();
+                    Marshal.Copy(omgPtr, m_Vec3Ptr, 0, 3);
+                    return new Vector3(m_Vec3Ptr[0], m_Vec3Ptr[1], m_Vec3Ptr[2]);
                 }
                 return Vector3.zero;
             }
 
             set {
-                if (m_body != null) {
-                    m_body.SetOmega(value.x, value.y, value.z);
+                if (m_Body != null) {
+                    m_Body.SetOmega(value.x, value.y, value.z);
                 }
             }
 
         }
 
         public float Mass {
-            get { return m_mass; }
+            get { return m_Mass; }
             set {
-                m_mass = value;
-                if (m_body != null) {
-                    m_body.SetMass(value);
+                m_Mass = value;
+                if (m_Body != null) {
+                    m_Body.SetMass(value);
                 }
             }
         }
 
         public Vector3 CenterOfMass {
             get {
-                if (m_body != null) {
-                    IntPtr comPtr = m_body.GetCenterOfMass();
-                    Marshal.Copy(comPtr, m_vec3Ptr, 0, 3);
-                    return new Vector3(m_vec3Ptr[0], m_vec3Ptr[1], m_vec3Ptr[2]);
+                if (m_Body != null) {
+                    IntPtr comPtr = m_Body.GetCenterOfMass();
+                    Marshal.Copy(comPtr, m_Vec3Ptr, 0, 3);
+                    return new Vector3(m_Vec3Ptr[0], m_Vec3Ptr[1], m_Vec3Ptr[2]);
                 }
                 return Vector3.zero;
             }
 
             set {
-                if (m_body != null) {
-                    m_body.SetCenterOfMass(value.x, value.y, value.z, m_Ixx, m_Iyy, m_Izz, m_CalculateInertia);
+                if (m_Body != null) {
+                    m_Body.SetCenterOfMass(value.x, value.y, value.z, m_Ixx, m_Iyy, m_Izz, m_CalculateInertia);
                 }
             }
 
@@ -253,85 +261,96 @@ namespace Newton {
 
         public float LinearDamping {
             get {
-                if (m_body != null) {
-                    m_linearDamping = m_body.GetLinearDamping();
+                if (m_Body != null) {
+                    m_LinearDamping = m_Body.GetLinearDamping();
                 }
-                return m_linearDamping;
+                return m_LinearDamping;
             }
 
             set {
-                m_linearDamping = value;
-                if (m_body != null) {
-                    m_body.SetLinearDamping(value);
+                m_LinearDamping = value;
+                if (m_Body != null) {
+                    m_Body.SetLinearDamping(value);
                 }
             }
         }
 
         public Vector3 AngularDamping {
             get {
-                if (m_body != null) {
-                    IntPtr dampingPtr = m_body.GetAngularDamping();
-                    Marshal.Copy(dampingPtr, m_vec3Ptr, 0, 3);
-                    m_angularDamping = new Vector3(m_vec3Ptr[0], m_vec3Ptr[1], m_vec3Ptr[2]);
+                if (m_Body != null) {
+                    IntPtr dampingPtr = m_Body.GetAngularDamping();
+                    Marshal.Copy(dampingPtr, m_Vec3Ptr, 0, 3);
+                    m_AngularDamping = new Vector3(m_Vec3Ptr[0], m_Vec3Ptr[1], m_Vec3Ptr[2]);
                 }
-                return m_angularDamping;
+                return m_AngularDamping;
             }
 
             set {
-                m_angularDamping = new Vector3(value.x, value.y, value.z);
-                if (m_body != null) {
-                    m_body.SetAngularDamping(value.x, value.y, value.z);
+                m_AngularDamping = new Vector3(value.x, value.y, value.z);
+                if (m_Body != null) {
+                    m_Body.SetAngularDamping(value.x, value.y, value.z);
                 }
             }
-
         }
-
 
         public bool SleepState {
             get {
-                if (m_body != null)
-                    return m_body.GetSleepState();
+                if (m_Body != null)
+                    return m_Body.GetSleepState();
 
                 return false;
             }
             set {
-                if (m_body != null) {
-                    m_body.SetSleepState(value);
+                if (m_Body != null) {
+                    m_Body.SetSleepState(value);
                 }
             }
         }
 
         protected virtual void CreateBodyAndCollision() {
-            if (m_collision == null && m_body == null) {
-                m_collision = new NewtonBodyCollision(this);
-                m_body = new dNewtonDynamicBody(World.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+            if (m_Collision == null && m_Body == null) {
+                m_Collision = new NewtonBodyCollision(this);
+                m_Body = new dNewtonDynamicBody(World.GetWorld(), m_Collision.GetShape(), Utils.ToMatrix(m_CachedTransform.position, m_CachedTransform.rotation), m_Mass);
             }
         }
 
         public NewtonWorld World { get; private set; }
 
-        public float m_mass = 0.0f;
-        public Vector3 m_centerOfMass = new Vector3(0.0f, 0.0f, 0.0f);
-        public float m_Ixx = 0.0f;
-        public float m_Iyy = 0.0f;
-        public float m_Izz = 0.0f;
-        public bool m_CalculateInertia = true;
-        public bool m_isScene = false;
-        public bool m_showGizmo = false;
-        public float m_gizmoScale = 1.0f;
-        public Vector3 m_forceAcc { get; set; }
-        public Vector3 m_torqueAcc { get; set; }
-        public float m_linearDamping = 0.1f;
-        public Vector3 m_angularDamping = new Vector3(0.1f, 0.1f, 0.1f);
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_mass")]
+        protected float m_Mass = 0.0f;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_centerOfMass")]
+        protected Vector3 m_CenterOfMass = new Vector3(0.0f, 0.0f, 0.0f);
+        [SerializeField]
+        protected float m_Ixx = 0.0f;
+        [SerializeField]
+        protected float m_Iyy = 0.0f;
+        [SerializeField]
+        protected float m_Izz = 0.0f;
+        [SerializeField]
+        protected bool m_CalculateInertia = true;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_isScene")]
+        protected bool m_IsScene = false;
+        public bool IsScene { get { return m_IsScene; } }
+        [SerializeField]
+        protected bool m_ShowGizmo = false;
+        [SerializeField]
+        protected float m_GizmoScale = 1.0f;
+        [SerializeField]
+        protected float m_LinearDamping = 0.1f;
+        [SerializeField]
+        private Vector3 m_AngularDamping = new Vector3(0.1f, 0.1f, 0.1f);
 
-       
+        
+        private Vector3 m_ForceAcc;
+        private Vector3 m_TorqueAcc;
 
-        internal dNewtonBody m_body = null;
-        internal NewtonBodyCollision m_collision = null;
-        private float[] m_positionPtr = new float[3];
-        private float[] m_rotationPtr = new float[4];
-        private float[] m_vec3Ptr = new float[3];
-        private float[] m_comPtr = new float[3];
+        internal dNewtonBody m_Body = null;
+        internal NewtonBodyCollision m_Collision = null;
+        private float[] m_PositionPtr = new float[3];
+        private float[] m_RotationPtr = new float[4];
+        private float[] m_Vec3Ptr = new float[3];
+        private float[] m_ComPtr = new float[3];
+        private Transform m_CachedTransform;
 
         internal List<NewtonBodyScript> m_scripts = new List<NewtonBodyScript>();
         private bool initialized = false;

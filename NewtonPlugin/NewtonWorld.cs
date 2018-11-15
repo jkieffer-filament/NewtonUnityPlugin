@@ -66,7 +66,7 @@ namespace Newton {
 
 
         public dNewtonWorld GetWorld() {
-            return m_world;
+            return m_World;
         }
 
         private void Awake() {
@@ -79,32 +79,32 @@ namespace Newton {
             m_onWorldCallback = new OnWorldUpdateCallback(OnWorldUpdate);
             m_onWorldBodyTransfromUpdateCallback = new OnWorldBodyTransfromUpdateCallback(OnBodyTransformUpdate);
 
-            m_world.SetAsyncUpdate(m_asyncUpdate);
-            m_world.SetFrameRate(1f/Time.fixedDeltaTime);
-            m_world.SetThreadsCount(m_numberOfThreads);
-            m_world.SetSolverIterations(m_solverIterationsCount);
-            m_world.SetBroadPhase(m_broadPhaseType);
-            m_world.SetGravity(m_gravity.x, m_gravity.y, m_gravity.z);
-            m_world.SetSubSteps(m_subSteps);
-            m_world.SetParallelSolverOnLargeIsland(m_useParallerSolver);
-            m_world.SetDefaultMaterial(m_defaultRestitution, m_defaultStaticFriction, m_defaultKineticFriction, true);
-            m_world.SetCallbacks(m_onWorldCallback, m_onWorldBodyTransfromUpdateCallback);
+            m_World.SetAsyncUpdate(m_AsyncUpdate);
+            m_World.SetFrameRate(1f/Time.fixedDeltaTime);
+            m_World.SetThreadsCount(m_NumberOfThreads);
+            m_World.SetSolverIterations(m_SolverIterationsCount);
+            m_World.SetBroadPhase(m_BroadPhaseType);
+            m_World.SetGravity(m_Gravity.x, m_Gravity.y, m_Gravity.z);
+            m_World.SetSubSteps(m_SubSteps);
+            m_World.SetParallelSolverOnLargeIsland(m_UseParallerSolver);
+            m_World.SetDefaultMaterial(m_DefaultRestitution, m_DefaultStaticFriction, m_DefaultKineticFriction, true);
+            m_World.SetCallbacks(m_onWorldCallback, m_onWorldBodyTransfromUpdateCallback);
 
             //Load all physics plug ins and choose the best one
-            m_world.SelectPlugin(IntPtr.Zero);
-            if (m_useParallerSolver && (m_pluginsOptions > 0)) {
+            m_World.SelectPlugin(IntPtr.Zero);
+            if (m_UseParallerSolver && (m_PluginsOptions > 0)) {
                 string path = Application.dataPath;
-                m_world.LoadPlugins(path);
+                m_World.LoadPlugins(path);
                 int index = 1;
-                for (IntPtr plugin = m_world.FirstPlugin(); plugin != IntPtr.Zero; plugin = m_world.NextPlugin(plugin)) {
-                    if (index == m_pluginsOptions) {
-                        Debug.Log("Using newton physics solver: " + m_world.GetPluginName(plugin));
-                        m_world.SelectPlugin(plugin);
+                for (IntPtr plugin = m_World.FirstPlugin(); plugin != IntPtr.Zero; plugin = m_World.NextPlugin(plugin)) {
+                    if (index == m_PluginsOptions) {
+                        Debug.Log("Using newton physics solver: " + m_World.GetPluginName(plugin));
+                        m_World.SelectPlugin(plugin);
                     }
                     index++;
                 }
             } else {
-                m_world.UnloadPlugins();
+                m_World.UnloadPlugins();
             }
 
             InitScene();
@@ -138,29 +138,29 @@ namespace Newton {
                 if (materialInteraction.m_material_0 && materialInteraction.m_material_1) {
                     int id0 = materialInteraction.m_material_0.GetInstanceID();
                     int id1 = materialInteraction.m_material_1.GetInstanceID();
-                    m_world.SetMaterialInteraction(id0, id1, materialInteraction.m_restitution, materialInteraction.m_staticFriction, materialInteraction.m_kineticFriction, materialInteraction.m_collisionEnabled);
+                    m_World.SetMaterialInteraction(id0, id1, materialInteraction.m_restitution, materialInteraction.m_staticFriction, materialInteraction.m_kineticFriction, materialInteraction.m_collisionEnabled);
                 }
             }
         }
 
         private void DestroyScene() {
-            if (m_world != null) {
+            if (m_World != null) {
                 foreach (NewtonBody nb in m_bodies) {
                     nb.DestroyRigidBody();
                 }
 
-                m_world = null;
+                m_World = null;
             }
         }
 
         void FixedUpdate() {
             //Debug.Log("Update time :" + Time.deltaTime);
-            if (m_serializeSceneOnce) {
-                m_serializeSceneOnce = false;
-                m_world.SaveSerializedScene(m_saveSceneName);
+            if (m_SerializeSceneOnce) {
+                m_SerializeSceneOnce = false;
+                m_World.SaveSerializedScene(m_SaveSceneName);
             }
 
-            m_world.Update(Time.fixedDeltaTime);
+            m_World.Update(Time.fixedDeltaTime);
         }
 
         private void OnWorldUpdate(float timestep) {
@@ -170,14 +170,14 @@ namespace Newton {
 
                 foreach (NewtonBodyScript script in bodyPhysics.m_scripts) {
                     if (script.m_collisionNotification) {
-                        for (IntPtr contact = m_world.GetFirstContactJoint(bodyPhysics.m_body); contact != IntPtr.Zero; contact = m_world.GetNextContactJoint(bodyPhysics.m_body, contact)) {
-                            var body0 = (NewtonBody)GCHandle.FromIntPtr(m_world.GetBody0UserData(contact)).Target;
-                            var body1 = (NewtonBody)GCHandle.FromIntPtr(m_world.GetBody1UserData(contact)).Target;
+                        for (IntPtr contact = m_World.GetFirstContactJoint(bodyPhysics.m_Body); contact != IntPtr.Zero; contact = m_World.GetNextContactJoint(bodyPhysics.m_Body, contact)) {
+                            var body0 = (NewtonBody)GCHandle.FromIntPtr(m_World.GetBody0UserData(contact)).Target;
+                            var body1 = (NewtonBody)GCHandle.FromIntPtr(m_World.GetBody1UserData(contact)).Target;
                             var otherBody = bodyPhysics == body0 ? body1 : body0;
                             script.OnCollision(otherBody);
 
                             if (script.m_contactNotification) {
-                                for (IntPtr ct = m_world.GetFirstContact(contact); ct != IntPtr.Zero; ct = m_world.GetNextContact(contact, ct)) {
+                                for (IntPtr ct = m_World.GetFirstContact(contact); ct != IntPtr.Zero; ct = m_World.GetNextContact(contact, ct)) {
                                     //var normImpact = dNewtonContact.GetContactNormalImpact(ct);
                                     //script.OnContact(otherBody, normImpact);
                                 }
@@ -205,7 +205,7 @@ namespace Newton {
             Vector3 startPos = origin;
             Vector3 endPos = startPos + (direction * distance);
 
-            var hitInfoPtr = m_world.Raycast(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, layerMask);
+            var hitInfoPtr = m_World.Raycast(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, layerMask);
             if (hitInfoPtr != IntPtr.Zero) {
                 _InternalRayHitInfo info = (_InternalRayHitInfo)Marshal.PtrToStructure(hitInfoPtr, typeof(_InternalRayHitInfo));
 
@@ -230,22 +230,35 @@ namespace Newton {
             return false;
         }
 
-        private dNewtonWorld m_world = new dNewtonWorld();
-        public bool m_asyncUpdate = true;
-        public bool m_serializeSceneOnce = false;
-        public bool m_useParallerSolver = true;
-        public string m_saveSceneName = "scene_01.bin";
-        public int m_broadPhaseType = 0;
-        public int m_numberOfThreads = 0;
-        public int m_solverIterationsCount = 1;
-        public int m_subSteps = 2;
-        public int m_pluginsOptions = 0;
+        private dNewtonWorld m_World = new dNewtonWorld();
+        [SerializeField]
+        private bool m_AsyncUpdate = true;
+        [SerializeField]
+        private bool m_SerializeSceneOnce = false;
+        [SerializeField]
+        private bool m_UseParallerSolver = true;
+        [SerializeField]
+        private string m_SaveSceneName = "scene_01.bin";
+        [SerializeField]
+        private int m_BroadPhaseType = 0;
+        [SerializeField]
+        private int m_NumberOfThreads = 0;
+        [SerializeField]
+        private int m_SolverIterationsCount = 1;
+        [SerializeField]
+        private int m_SubSteps = 2;
+        [SerializeField]
+        private int m_PluginsOptions = 0;
 
-        public Vector3 m_gravity = new Vector3(0.0f, -9.8f, 0.0f);
+        [SerializeField]
+        internal Vector3 m_Gravity = new Vector3(0.0f, -9.8f, 0.0f);
 
-        public float m_defaultRestitution = 0.4f;
-        public float m_defaultStaticFriction = 0.8f;
-        public float m_defaultKineticFriction = 0.6f;
+        [SerializeField]
+        private float m_DefaultRestitution = 0.4f;
+        [SerializeField]
+        private float m_DefaultStaticFriction = 0.8f;
+        [SerializeField]
+        private float m_DefaultKineticFriction = 0.6f;
 
         private OnWorldUpdateCallback m_onWorldCallback;
         private OnWorldBodyTransfromUpdateCallback m_onWorldBodyTransfromUpdateCallback;

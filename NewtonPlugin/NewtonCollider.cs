@@ -173,13 +173,13 @@ namespace Newton {
 
             if (!ReferenceEquals(newBody, Body)) {
                 if (!ReferenceEquals(Body, null)) {
-                    Body.m_collision.RemoveCollider(this);
+                    Body.m_Collision.RemoveCollider(this);
                 }
 
                 Body = newBody;
 
                 if (!ReferenceEquals(Body, null)) {
-                    Body.m_collision.AddCollider(this);
+                    Body.m_Collision.AddCollider(this);
                 }
             }
         }

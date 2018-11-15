@@ -45,20 +45,20 @@ namespace Newton.Editor {
 
         void OnEnable() {
             // Setup the SerializedProperties
-            m_gravityProp = serializedObject.FindProperty("m_gravity");
-            m_subStepsProp = serializedObject.FindProperty("m_subSteps");
-            m_asyncUpdateProp = serializedObject.FindProperty("m_asyncUpdate");
-            m_saveSceneNameProp = serializedObject.FindProperty("m_saveSceneName");
-            m_serializeSceneOnceProp = serializedObject.FindProperty("m_serializeSceneOnce");
-            m_numThreadsProp = serializedObject.FindProperty("m_numberOfThreads");
-            m_broadPhaseTypeProp = serializedObject.FindProperty("m_broadPhaseType");
-            m_solverIterationsCountProp = serializedObject.FindProperty("m_solverIterationsCount");
-            m_useParallerSolverProp = serializedObject.FindProperty("m_useParallerSolver");
-            m_pluginsOptionsProp = serializedObject.FindProperty("m_pluginsOptions");
+            m_gravityProp = serializedObject.FindProperty("m_Gravity");
+            m_subStepsProp = serializedObject.FindProperty("m_SubSteps");
+            m_asyncUpdateProp = serializedObject.FindProperty("m_AsyncUpdate");
+            m_saveSceneNameProp = serializedObject.FindProperty("m_SaveSceneName");
+            m_serializeSceneOnceProp = serializedObject.FindProperty("m_SerializeSceneOnce");
+            m_numThreadsProp = serializedObject.FindProperty("m_NumberOfThreads");
+            m_broadPhaseTypeProp = serializedObject.FindProperty("m_BroadPhaseType");
+            m_solverIterationsCountProp = serializedObject.FindProperty("m_SolverIterationsCount");
+            m_useParallerSolverProp = serializedObject.FindProperty("m_UseParallerSolver");
+            m_pluginsOptionsProp = serializedObject.FindProperty("m_PluginsOptions");
 
-            m_defaultRestitutionProp = serializedObject.FindProperty("m_defaultRestitution");
-            m_defaultStaticFrictionProp = serializedObject.FindProperty("m_defaultStaticFriction");
-            m_defaultKineticFrictionProp = serializedObject.FindProperty("m_defaultKineticFriction");
+            m_defaultRestitutionProp = serializedObject.FindProperty("m_DefaultRestitution");
+            m_defaultStaticFrictionProp = serializedObject.FindProperty("m_DefaultStaticFriction");
+            m_defaultKineticFrictionProp = serializedObject.FindProperty("m_DefaultKineticFriction");
         }
 
         public override void OnInspectorGUI() {

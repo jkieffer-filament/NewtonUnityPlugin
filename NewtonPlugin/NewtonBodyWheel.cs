@@ -40,7 +40,7 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Wheel")]
     class NewtonBodyWheel : NewtonBody {
         void Start() {
-            m_isScene = false;
+            m_IsScene = false;
             m_shape = GetComponent<NewtonWheelCollider>();
             m_shape.m_scale = new Vector3(1.0f, 1.0f, 1.0f);
         }
@@ -59,7 +59,7 @@ namespace Newton {
 
             dTireData data = new dTireData();
             //data.m_owner = GCHandle.ToIntPtr(handle);
-            m_wheel = new dNewtonWheel((dNewtonVehicle)m_owner.m_body, data);
+            m_wheel = new dNewtonWheel((dNewtonVehicle)m_owner.m_Body, data);
         }
 
         public void DestroyTire() {

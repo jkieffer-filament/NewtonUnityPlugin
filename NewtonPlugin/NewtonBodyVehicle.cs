@@ -29,7 +29,7 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Vehicle")]
     class NewtonBodyVehicle : NewtonBody {
         void Start() {
-            m_isScene = false;
+            m_IsScene = false;
         }
 
         protected override void OnDestroy() {
@@ -46,8 +46,8 @@ namespace Newton {
 
         protected override void CreateBodyAndCollision() {
             Debug.Log("create actual vehicle");
-            m_collision = new NewtonBodyCollision(this);
-            m_body = new dNewtonVehicle(World.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
+            m_Collision = new NewtonBodyCollision(this);
+            m_Body = new dNewtonVehicle(World.GetWorld(), m_Collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_Mass);
         }
 
         public override void InitRigidBody() {
@@ -55,7 +55,7 @@ namespace Newton {
             base.InitRigidBody();
 
             // initialize all wheels
-            dNewtonVehicle vehicle = (dNewtonVehicle)m_body;
+            dNewtonVehicle vehicle = (dNewtonVehicle)m_Body;
 
             foreach (NewtonBodyWheel wheel in m_wheels) {
                 if ((wheel != null) && (wheel.m_owner == this)) {

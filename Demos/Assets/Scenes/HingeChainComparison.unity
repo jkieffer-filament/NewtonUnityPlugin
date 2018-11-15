@@ -2672,19 +2672,19 @@ MonoBehaviour:
   m_Script: {fileID: -393850156, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_asyncUpdate: 1
-  m_serializeSceneOnce: 0
-  m_useParallerSolver: 1
-  m_saveSceneName: scene_01.bin
-  m_broadPhaseType: 0
-  m_numberOfThreads: 0
-  m_solverIterationsCount: 6
-  m_subSteps: 1
-  m_pluginsOptions: 0
-  m_gravity: {x: 0, y: -9.8, z: 0}
-  m_defaultRestitution: 0.4
-  m_defaultStaticFriction: 0.8
-  m_defaultKineticFriction: 0.6
+  m_AsyncUpdate: 1
+  m_SerializeSceneOnce: 0
+  m_UseParallerSolver: 1
+  m_SaveSceneName: scene_01.bin
+  m_BroadPhaseType: 0
+  m_NumberOfThreads: 0
+  m_SolverIterationsCount: 2
+  m_SubSteps: 2
+  m_PluginsOptions: 2
+  m_Gravity: {x: 0, y: -9.8, z: 0}
+  m_DefaultRestitution: 0.4
+  m_DefaultStaticFriction: 0.8
+  m_DefaultKineticFriction: 0.6
 --- !u!4 &1128207611
 Transform:
   m_ObjectHideFlags: 0
@@ -4594,17 +4594,17 @@ MonoBehaviour:
   m_Script: {fileID: -1470385246, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mass: 0
-  m_centerOfMass: {x: 0, y: 0, z: 0}
+  m_Mass: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_Ixx: 0
   m_Iyy: 0
   m_Izz: 0
   m_CalculateInertia: 1
-  m_isScene: 1
-  m_showGizmo: 0
-  m_gizmoScale: 1
-  m_linearDamping: 0.1
-  m_angularDamping: {x: 0.1, y: 0.1, z: 0.1}
+  m_IsScene: 1
+  m_ShowGizmo: 0
+  m_GizmoScale: 1
+  m_LinearDamping: 0.1
+  m_AngularDamping: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!1001 &2087920314
 Prefab:
   m_ObjectHideFlags: 0

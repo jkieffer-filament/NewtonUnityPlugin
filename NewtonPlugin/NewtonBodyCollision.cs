@@ -27,11 +27,6 @@ using Newton.Internal;
 
 namespace Newton {
     public class NewtonBodyCollision {
-        struct ColliderShapePair {
-            public NewtonCollider m_collider;
-            public dNewtonCollision m_shape;
-        }
-
         public NewtonBodyCollision(NewtonBody body) {
             if (body.World.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
 
@@ -40,7 +35,7 @@ namespace Newton {
             List<NewtonCollider> colliderList = new List<NewtonCollider>();
             TraverseColliders(body.gameObject, colliderList, body.gameObject, body);
 
-            if (body.m_isScene) {
+            if (body.IsScene) {
                 NewtonSceneCollider sceneCollider = body.gameObject.AddComponent<NewtonSceneCollider>();
                 dNewtonCollisionScene sceneShape = (dNewtonCollisionScene)sceneCollider.Create(body.World);
                 sceneCollider.SetShape(sceneShape);
@@ -157,7 +152,7 @@ namespace Newton {
             bool success = m_Colliders.Add(collider);
 
             if (success) {
-                if (m_Body.m_isScene) {
+                if (m_Body.IsScene) {
                     var sceneShape = (dNewtonCollisionScene)GetShape();
 
                     sceneShape.BeginAddRemoveCollision();
@@ -209,7 +204,7 @@ namespace Newton {
             bool success = m_Colliders.Remove(collider);
 
             if (success) {
-                if (m_Body.m_isScene) {
+                if (m_Body.IsScene) {
                     var sceneShape = (dNewtonCollisionScene)GetShape();
 
                     sceneShape.BeginAddRemoveCollision();
