@@ -36,6 +36,7 @@ namespace Newton {
             m_Joint = new dNewtonJointHinge(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
+            EnableCollision = m_EnableCollision;
             EnableLimits = m_EnableLimits;
             SetSpringDamper = m_SetSpringDamper;
             m_Initialized = true;
@@ -174,6 +175,7 @@ namespace Newton {
             TargetAngle = m_TargetAngle;
             AngularRate = m_AngularRate;
             MaxTorque = m_MaxTorque;
+            EnableCollision = m_EnableCollision;
         }
 
         void OnDrawGizmosSelected() {

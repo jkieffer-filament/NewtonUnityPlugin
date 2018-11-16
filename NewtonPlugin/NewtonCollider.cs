@@ -179,6 +179,7 @@ namespace Newton {
                 Body = newBody;
 
                 if (!ReferenceEquals(Body, null)) {
+                    UpdateParams(m_Shape);
                     Body.m_Collision.AddCollider(this);
                 }
             }

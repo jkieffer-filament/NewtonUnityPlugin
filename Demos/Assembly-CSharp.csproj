@@ -53,7 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Motor.cs" />
+     <Compile Include="Assets\Scripts\Hand.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/jkieffer.FILAMENT/Documents/Repos/NewtonUnityPlugin/Demos/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>

@@ -30,7 +30,12 @@ class dNewtonJoint: public dAlloc
 	dNewtonJoint();
 	~dNewtonJoint();
 
+
 	void SetStiffness(dFloat stiffness);
+
+	bool GetCollisionState() const;
+	void SetCollisionState(bool state) const;
+
 	void Destroy();
 
 	protected:

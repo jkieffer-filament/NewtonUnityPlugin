@@ -26,6 +26,17 @@ namespace Newton {
     abstract public class NewtonJoint : MonoBehaviour {
         abstract public void InitJoint();
 
+
+        public NewtonBody OtherBody {
+            get { return m_OtherBody; }
+            set {
+                m_OtherBody = value;
+                if (m_Joint != null) {
+                    
+                }
+            }
+        }
+
         public float Stiffness {
             get {
                 return m_Stiffness;
@@ -34,6 +45,18 @@ namespace Newton {
                 m_Stiffness = value;
                 if (m_Joint != null) {
                     m_Joint.SetStiffness(m_Stiffness);
+                }
+            }
+        }
+
+        public bool EnableCollision {
+            get {
+                return m_EnableCollision;
+            }
+            set {
+                m_EnableCollision = value;
+                if (m_Joint != null) {
+                    m_Joint.SetCollisionState(m_EnableCollision);
                 }
             }
         }
@@ -55,6 +78,8 @@ namespace Newton {
         protected NewtonBody m_OtherBody = null;
         [SerializeField]
         protected float m_Stiffness = 1.0f;
+        [SerializeField]
+        protected bool m_EnableCollision = false;
         [SerializeField]
         protected float m_GizmoScale = 1.0f;
     }

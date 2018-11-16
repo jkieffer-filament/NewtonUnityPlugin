@@ -35,6 +35,7 @@ namespace Newton {
             m_Joint = new dNewtonJointCorkscrew(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
+            EnableCollision = m_EnableCollision;
             EnableLimits = m_EnableLimits;
             SetSpringDamper = m_SetSpringDamper;
         }

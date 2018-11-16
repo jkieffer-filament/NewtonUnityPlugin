@@ -52,6 +52,16 @@ void dNewtonJoint::SetStiffness(dFloat stiffness)
 	m_joint->SetStiffness(stiffness);
 }
 
+bool dNewtonJoint::GetCollisionState() const
+{
+	return NewtonJointGetCollisionState(m_joint->GetJoint()) ? true : false;
+}
+
+void dNewtonJoint::SetCollisionState(bool state) const
+{
+	NewtonJointSetCollisionState(m_joint->GetJoint(), state ? 1 : 0);
+}
+
 // This callback is triggered on join destruction and can be triggered when a body connected to this joint is destroyed.
 // This will set the reference joint pointer to NULL so that we won't try to delete it again if the method Destroy is called
 void dNewtonJoint::DestructorCallback(const dCustomJoint* const me) 

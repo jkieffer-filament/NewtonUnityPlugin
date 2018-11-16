@@ -26368,6 +26368,7 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -26435,6 +26436,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 28.713001, y: -89.998, z: 0.001}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ac50018ca7f9e4ea1ca40987fa545b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  World: {fileID: 1128207610}
+  Camera: {fileID: 534669904}
 --- !u!1 &542066917
 GameObject:
   m_ObjectHideFlags: 0
@@ -109952,7 +109966,7 @@ GameObject:
   - component: {fileID: 2087495565}
   - component: {fileID: 2087495564}
   - component: {fileID: 2087495563}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110028,7 +110042,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_layer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_posit: {x: 0, y: 0, z: 0}
   m_rotation: {x: 0, y: 0, z: 0}
   m_scale: {x: 1, y: 1, z: 1}

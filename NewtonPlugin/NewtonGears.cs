@@ -36,6 +36,8 @@ namespace Newton {
             dVector childPin_ = new dVector(childPin.x, childPin.y, childPin.z, 0.0f);
             dVector parentPin_ = new dVector(parentPin.x, parentPin.y, parentPin.z, 0.0f);
             m_Joint = new dNewtonJointGear(m_GearRatio, childPin_, parentPin_, child.GetBody().GetBody(), otherBody);
+
+            EnableCollision = m_EnableCollision;
         }
 
         void OnDrawGizmosSelected() {
@@ -74,6 +76,8 @@ namespace Newton {
             dVector dReferencePin = new dVector(refPinNorm.x, refPinNorm.y, refPinNorm.z, 0.0f);
 
             m_Joint = new dNewtonJointDifferentialGear(m_GearRatio, dChildPin, dParentPin, dReferencePin, child.GetBody().GetBody(), otherBody, referenceBody);
+
+            EnableCollision = m_EnableCollision;
         }
 
         void OnDrawGizmosSelected() {
@@ -117,6 +121,8 @@ namespace Newton {
             dVector childPin = new dVector(gearPinNorm.x, gearPinNorm.y, gearPinNorm.z, 0.0f);
             dVector parentPin = new dVector(slidePinNorm.x, slidePinNorm.y, slidePinNorm.z, 0.0f);
             m_Joint = new dNewtonJointRackAndPinion(m_GearRatio, childPin, parentPin, child.GetBody().GetBody(), otherBody);
+
+            EnableCollision = m_EnableCollision;
         }
 
         void OnDrawGizmosSelected() {

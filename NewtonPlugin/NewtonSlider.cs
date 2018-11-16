@@ -34,6 +34,7 @@ namespace Newton {
             m_Joint = new dNewtonJointSlider(matrix, child.GetBody().GetBody(), otherBody);
 
             Stiffness = m_Stiffness;
+            EnableCollision = m_EnableCollision;
             EnableLimits = m_EnableLimits;
             SetSpringDamper = m_SetSpringDamper;
         }
@@ -168,6 +169,7 @@ namespace Newton {
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
             m_Joint = new dNewtonJointSliderActuator(matrix, child.GetBody().GetBody(), otherBody);
 
+            EnableCollision = m_EnableCollision;
             Speed = m_Speed;
             MaxForce = m_MaxForce;
             TargetPosition = m_TargetPosition;

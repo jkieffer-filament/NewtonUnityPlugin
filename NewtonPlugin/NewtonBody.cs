@@ -340,7 +340,7 @@ namespace Newton {
         [SerializeField]
         private Vector3 m_AngularDamping = new Vector3(0.1f, 0.1f, 0.1f);
 
-        
+
         private Vector3 m_ForceAcc;
         private Vector3 m_TorqueAcc;
 
