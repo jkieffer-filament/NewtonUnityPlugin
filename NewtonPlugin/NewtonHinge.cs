@@ -31,7 +31,7 @@ namespace Newton {
                 return;
 
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, m_Pin);
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
             m_Joint = new dNewtonJointHinge(matrix, child.GetBody().GetBody(), otherBody);
 
@@ -168,7 +168,7 @@ namespace Newton {
     public class NewtonHingeActuator : NewtonJoint {
         public override void InitJoint() {
             NewtonBody child = GetComponent<NewtonBody>();
-            dMatrix matrix = Utils.ToMatrix(m_Pivot, Quaternion.FromToRotation(Vector3.right, m_Pin));
+            dMatrix matrix = Utils.ToMatrix(m_Pivot, m_Pin);
             IntPtr otherBody = (m_OtherBody != null) ? m_OtherBody.GetBody().GetBody() : IntPtr.Zero;
             m_Joint = new dNewtonJointHingeActuator(matrix, child.GetBody().GetBody(), otherBody);
 

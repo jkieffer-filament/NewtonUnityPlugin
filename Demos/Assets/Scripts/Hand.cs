@@ -9,13 +9,15 @@ public class Hand : MonoBehaviour {
 	public Camera Camera;
 
 	private NewtonBallAndSocket m_Joint;
-	private NewtonBody m_Body;
+	private NewtonKinematicBody m_Body;
 
+	private Vector3 m_AngularDamping;
 	private float m_PlaneDistance;
+
 
 	// Use this for initialization
 	void Start () {
-		m_Body = new GameObject("Hand").AddComponent<NewtonBody>();
+		m_Body = new GameObject("Hand").AddComponent<NewtonKinematicBody>();
 	}
 	
 	// Update is called once per frame
@@ -25,20 +27,19 @@ public class Hand : MonoBehaviour {
 			var ray = Camera.ScreenPointToRay(Input.mousePosition);
 			NewtonRayHitInfo info;
 			if (World.Raycast(ray.origin, ray.direction, 1000, out info)) {
-				
-
-
-				var toHit = Camera.transform.InverseTransformPoint(info.position);
+				var toHit = Camera.transform.InverseTransformPoint(info.Position);
 				m_PlaneDistance = Vector3.Project(toHit, Vector3.forward).magnitude;
 
 				m_Body.SleepState = false;
-				info.body.SleepState = false;
-				m_Body.GetBody().SetPosition(info.position.x, info.position.y, info.position.z);
-				m_Body.transform.position = info.position;
+				info.Body.SleepState = false;
+				m_Body.Position = info.Position;
+				m_Body.transform.position = info.Position;
 
+				m_AngularDamping = info.Body.AngularDamping;
+				info.Body.AngularDamping = new Vector3 (15f, 15f, 15f);
 				m_Joint = m_Body.gameObject.AddComponent<NewtonBallAndSocket>();
-				m_Joint.OtherBody = info.body;
-				m_Joint.Stiffness = 10;
+				m_Joint.OtherBody = info.Body;
+				m_Joint.Stiffness = 1;
 			}
 		}
 
@@ -52,21 +53,24 @@ public class Hand : MonoBehaviour {
 
 			NewtonRayHitInfo info;
 			if (World.Raycast(ray.origin, ray.direction, 1000, out info, 1 << LayerMask.NameToLayer("Environment")) &&
-			(ray.origin - info.position).sqrMagnitude < m_PlaneDistance * m_PlaneDistance) {
-				pos = info.position + info.normal * 0.5f;
+			(ray.origin - (info.Position + info.Normal * 0.5f)).sqrMagnitude < m_PlaneDistance * m_PlaneDistance) {
+				pos = info.Position + info.Normal * 0.5f;
 			} else { 
-				var inPlane = LineToPlane(Vector3.zero, direction, Vector3.back, Vector3.forward * m_PlaneDistance);
-				pos = Camera.transform.TransformPoint(inPlane);
+				var inCameraPlane = LineToPlane(Vector3.zero, direction, Vector3.back, Vector3.forward * m_PlaneDistance);
+				
+				var inGroundPlane = LineToPlane(Vector3.zero, direction, Camera.transform.InverseTransformDirection(Vector3.up), Camera.transform.InverseTransformPoint(new Vector3(0, 0.5f, 0)));
+
+				pos = inCameraPlane.sqrMagnitude < inGroundPlane.sqrMagnitude ? Camera.transform.TransformPoint(inCameraPlane) : Camera.transform.TransformPoint(inGroundPlane);
 			}
 
 			m_Body.SleepState = false;
 			m_Joint.OtherBody.SleepState = false;
-			m_Body.GetBody().SetPosition(pos.x, pos.y, pos.z);
-
+			m_Body.Position = pos;
 			m_Body.transform.position = pos;
 		}
 
 		else if (Input.GetMouseButtonUp(0) && m_Joint) {
+			m_Joint.OtherBody.AngularDamping = m_AngularDamping;
 			Destroy(m_Joint);
 			m_Joint = null;
 		}

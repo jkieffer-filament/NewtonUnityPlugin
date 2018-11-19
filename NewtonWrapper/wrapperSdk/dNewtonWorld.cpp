@@ -167,8 +167,15 @@ float dNewtonWorld::rayFilterCallback(const NewtonBody* const body, const Newton
 			hitInfo->managedBodyHandle = nullptr;
 		}
 
+		if (shapeHit) {
+			dNewtonCollision* dCollision = static_cast<dNewtonCollision*>(NewtonCollisionGetUserData(shapeHit));
+			hitInfo->managedColliderHandle = dCollision->GetUserData();
+		}
+		else {
+			hitInfo->managedColliderHandle = nullptr;;
+		}
+
 		hitInfo->intersectParam = intersectParam;
-		hitInfo->collider = shapeHit;
 		hitInfo->position[0] = hitContact[0];
 		hitInfo->position[1] = hitContact[1];
 		hitInfo->position[2] = hitContact[2];
@@ -190,14 +197,10 @@ unsigned dNewtonWorld::rayPreFilterCallback(const NewtonBody* const body, const 
 		dNewtonCollision* dCol = static_cast<dNewtonCollision*>(NewtonCollisionGetUserData(collision));
 		int layer = dCol->m_layer;
 		
-		if (layer & hitInfo->layermask) {
-			return 0;
-		}
-
-		return 1;
+		return (1 << layer) & hitInfo->layermask ? 1 : 0;
 	}
 
-	return 1;
+	return 0;
 }
 
 void dNewtonWorld::SetMaterialInteraction(int materialID0, int materialID1, float restitution, float staticFriction, float kineticFriction, bool collisionEnable)

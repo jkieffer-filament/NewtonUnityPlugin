@@ -37,6 +37,21 @@ namespace Newton {
         }
 
 
+        static public dMatrix ToMatrix(Vector3 posit, Vector3 pin) {
+
+            // make orthogonal basis vectors
+            Vector3 frontBasis = pin.normalized;
+            Vector3 upBasis = frontBasis.x != 0 || frontBasis.y != 0 ? new Vector3(-frontBasis.y, frontBasis.x, frontBasis.z) : new Vector3(frontBasis.x, frontBasis.z, -frontBasis.y);
+            Vector3 rightBasis = Vector3.Cross(frontBasis, upBasis);
+
+            dMatrix matrix = new dMatrix();
+            matrix.m_front = new dVector(frontBasis.x, frontBasis.y, frontBasis.z, 0f);
+            matrix.m_up = new dVector(upBasis.x, upBasis.y, upBasis.z, 0f);
+            matrix.m_right = new dVector(rightBasis.x, rightBasis.y, rightBasis.z, 0f);
+            matrix.m_posit = new dVector(posit.x, posit.y, posit.z, 1f);
+            return matrix;
+        }
+
         static public dMatrix ToMatrix(Vector3 posit, Vector3 pin0, Vector3 pin1) {
 
             // make orthogonal basis vectors
@@ -49,7 +64,7 @@ namespace Newton {
             matrix.m_front = new dVector(frontBasis.x, frontBasis.y, frontBasis.z, 0f);
             matrix.m_up = new dVector(upBasis.x, upBasis.y, upBasis.z, 0f);
             matrix.m_right = new dVector(rightBasis.x, rightBasis.y, rightBasis.z, 0f);
-            matrix.m_posit = new dVector(posit.x, posit.y, posit.z, 1f);
+            matrix.m_posit = new dVector(posit.x, posit.y, posit.z, 0f);
             return matrix;
         }
 

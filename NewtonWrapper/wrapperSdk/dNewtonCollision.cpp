@@ -69,6 +69,16 @@ void dNewtonCollision::SetLayer(int layer)
 	m_layer = layer;
 }
 
+void dNewtonCollision::SetUserData(void* userData)
+{
+	m_userData = userData;
+}
+
+void* dNewtonCollision::GetUserData()
+{
+	return m_userData;
+}
+
 void dNewtonCollision::DeleteShape()
 {
 	if (m_shape) {

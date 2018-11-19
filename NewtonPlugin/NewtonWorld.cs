@@ -41,12 +41,11 @@ namespace Newton {
     }
 
     public struct NewtonRayHitInfo {
-        public NewtonBody body;
-        //public NewtonCollider collider;
-        public Vector3 position;
-        public Vector3 normal;
-        public uint collisionID;
-
+        public NewtonBody Body;
+        public NewtonCollider Collider;
+        public Vector3 Position;
+        public Vector3 Normal;
+        public uint CollisionID;
     }
 
 
@@ -201,7 +200,7 @@ namespace Newton {
             }
         }
 
-        public bool Raycast(Vector3 origin, Vector3 direction, float distance, out NewtonRayHitInfo hitInfo, int layerMask = 0) {
+        public bool Raycast(Vector3 origin, Vector3 direction, float distance, out NewtonRayHitInfo hitInfo, int layerMask = Physics.DefaultRaycastLayers) {
             Vector3 startPos = origin;
             Vector3 endPos = startPos + (direction * distance);
 
@@ -210,27 +209,34 @@ namespace Newton {
                 _InternalRayHitInfo info = (_InternalRayHitInfo)Marshal.PtrToStructure(hitInfoPtr, typeof(_InternalRayHitInfo));
 
                 if (info.body != IntPtr.Zero) {
-                    hitInfo.body = (NewtonBody)GCHandle.FromIntPtr(info.body).Target;
+                    hitInfo.Body = (NewtonBody)GCHandle.FromIntPtr(info.body).Target;
                 } else {
-                    hitInfo.body = null;
+                    hitInfo.Body = null;
                 }
 
-                //hitInfo.collider = null;
-                hitInfo.position = info.position;
-                hitInfo.normal = info.normal;
-                hitInfo.collisionID = info.collisionID;
+                if (info.collider != IntPtr.Zero) {
+                    hitInfo.Collider = (NewtonCollider)GCHandle.FromIntPtr(info.collider).Target;
+                } else {
+                    hitInfo.Collider = null;
+                }
+
+                hitInfo.Position = info.position;
+                hitInfo.Normal = info.normal;
+                hitInfo.CollisionID = info.collisionID;
                 return true;
             }
 
-            hitInfo.body = null;
-            //hitInfo.collider = null;
-            hitInfo.position = Vector3.zero;
-            hitInfo.normal = Vector3.zero;
-            hitInfo.collisionID = 0;
+            hitInfo.Body = null;
+            hitInfo.Collider = null;
+            hitInfo.Position = Vector3.zero;
+            hitInfo.Normal = Vector3.zero;
+            hitInfo.CollisionID = 0;
             return false;
         }
 
         private dNewtonWorld m_World = new dNewtonWorld();
+
+        #region Inspector
         [SerializeField]
         private bool m_AsyncUpdate = true;
         [SerializeField]
@@ -259,6 +265,7 @@ namespace Newton {
         private float m_DefaultStaticFriction = 0.8f;
         [SerializeField]
         private float m_DefaultKineticFriction = 0.6f;
+        #endregion // Inspector
 
         private OnWorldUpdateCallback m_onWorldCallback;
         private OnWorldBodyTransfromUpdateCallback m_onWorldBodyTransfromUpdateCallback;

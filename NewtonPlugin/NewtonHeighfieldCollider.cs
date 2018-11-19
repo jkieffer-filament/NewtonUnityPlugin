@@ -38,18 +38,18 @@ namespace Newton {
         }
 
         private void SetDefualtParams() {
-            m_isTrigger = false;
-            m_inheritTransformScale = false;
+            m_IsTrigger = false;
+            m_InheritTransformScale = false;
 
             // static meshes can not be triggers.
-            m_isTrigger = false;
+            m_IsTrigger = false;
 
             // In Unity terrain can not be scale, so we do not apply scale
-            m_inheritTransformScale = false;
+            m_InheritTransformScale = false;
 
             // in unity terrain can not rotated or have local transformation either
-            m_posit = new Vector3(0.0f, 0.0f, 0.0f);
-            m_rotation = new Vector3(0.0f, 0.0f, 0.0f);
+            m_Position = new Vector3(0.0f, 0.0f, 0.0f);
+            m_Rotation = new Vector3(0.0f, 0.0f, 0.0f);
             transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
         }
 
@@ -107,7 +107,7 @@ namespace Newton {
         }
 
         public override void OnDrawGizmosSelected() {
-            if (m_showGizmo) {
+            if (m_ShowGizmo) {
                 SetDefualtParams();
                 TerrainData data = m_terrain.terrainData;
                 if ((data.heightmapResolution != m_oldResolution) || (m_oldSize != data.size) || ElevationHasChanged()) {

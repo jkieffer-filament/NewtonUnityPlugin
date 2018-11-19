@@ -27,13 +27,16 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Colliders/Sphere")]
     public class NewtonSphereCollider : NewtonCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
-            dNewtonCollision collider = new dNewtonCollisionSphere(world.GetWorld(), m_radius);
+            dNewtonCollision collider = new dNewtonCollisionSphere(world.GetWorld(), m_Radius);
             SetMaterial(collider);
             SetLayer(collider);
             return collider;
         }
 
-        public float m_radius = 0.5f;
+        public float Radius { get { return m_Radius; } }
+
+        [SerializeField]
+        private float m_Radius = 0.5f;
     }
 }
 

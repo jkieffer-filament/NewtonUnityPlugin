@@ -18,29 +18,21 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-using UnityEngine;
 using System;
+using UnityEngine;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 using Newton.Internal;
 
 namespace Newton {
-    [AddComponentMenu("Newton Physics/Colliders/Cone")]
-    public class NewtonConeCollider : NewtonCollider {
-        public override dNewtonCollision Create(NewtonWorld world) {
-            dNewtonCollision collider = new dNewtonCollisionCone(world.GetWorld(), m_Radius, m_Height);
-            SetMaterial(collider);
-            SetLayer(collider);
-            return collider;
+    [DisallowMultipleComponent]
+    [AddComponentMenu("Newton Physics/Rigid Kinematic Body")]
+    public class NewtonKinematicBody : NewtonBody {
+
+        protected override void CreateBodyAndCollision() {
+            m_Collision = new NewtonBodyCollision(this);
+            m_Body = new dNewtonKinematicBody(World.GetWorld(), m_Collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_Mass);
         }
-
-        public float Radius { get { return m_Radius; } }
-        public float Height { get { return m_Height; } }
-
-        #region Inspector
-        [SerializeField]
-        private float m_Radius = 0.25f;
-        [SerializeField]
-        private float m_Height = 0.5f;
-        #endregion
     }
 }
-

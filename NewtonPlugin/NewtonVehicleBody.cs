@@ -26,8 +26,8 @@ using Newton.Internal;
 
 namespace Newton {
     [DisallowMultipleComponent]
-    [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Vehicle")]
-    class NewtonBodyVehicle : NewtonBody {
+    [AddComponentMenu("Newton Physics/Vehicle/Rigid Vehicle Body")]
+    class NewtonVehicleBody : NewtonBody {
         void Start() {
             m_IsScene = false;
         }
@@ -35,8 +35,8 @@ namespace Newton {
         protected override void OnDestroy() {
             Debug.Log("destroy vehicle");
 
-            foreach (NewtonBodyWheel wheel in m_wheels) {
-                if ((wheel != null) && (wheel.m_owner == this)) {
+            foreach (NewtonWheelBody wheel in m_Wheels) {
+                if ((wheel != null) && (wheel.Vechicle == this)) {
                     wheel.DestroyTire();
                 }
             }
@@ -57,15 +57,15 @@ namespace Newton {
             // initialize all wheels
             dNewtonVehicle vehicle = (dNewtonVehicle)m_Body;
 
-            foreach (NewtonBodyWheel wheel in m_wheels) {
-                if ((wheel != null) && (wheel.m_owner == this)) {
+            foreach (NewtonWheelBody wheel in m_Wheels) {
+                if ((wheel != null) && (wheel.Vechicle == this)) {
                     wheel.CreateTire();
                 }
             }
         }
 
-        [Header("vehicle chassis data")]
-        public NewtonBodyWheel[] m_wheels = null;
+        [SerializeField]
+        private NewtonWheelBody[] m_Wheels = null;
     }
 }
 

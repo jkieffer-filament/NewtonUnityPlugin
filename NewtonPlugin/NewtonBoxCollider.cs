@@ -26,12 +26,17 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Colliders/Box")]
     public class NewtonBoxCollider : NewtonCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
-            dNewtonCollision collider = new dNewtonCollisionBox(world.GetWorld(), m_size.x, m_size.y, m_size.z);
+            dNewtonCollision collider = new dNewtonCollisionBox(world.GetWorld(), m_Size.x, m_Size.y, m_Size.z);
             SetMaterial(collider);
             SetLayer(collider);
             return collider;
         }
 
-        public Vector3 m_size = Vector3.one;
+        public Vector3 Size {
+            get { return m_Size; }
+        }
+
+        [SerializeField]
+        private Vector3 m_Size = Vector3.one;
     }
 }

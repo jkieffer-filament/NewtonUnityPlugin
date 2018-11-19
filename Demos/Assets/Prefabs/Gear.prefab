@@ -202,6 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OtherBody: {fileID: 0}
   m_Stiffness: 1
+  m_EnableCollision: 0
   m_GizmoScale: 1
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Pin: {x: 0, y: 0, z: 1}
@@ -223,17 +224,15 @@ MonoBehaviour:
   m_Script: {fileID: -1562967349, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_size: {x: 1, y: 1, z: 1}
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Size: {x: 1, y: 1, z: 1}
 --- !u!114 &114203320406203790
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -245,19 +244,17 @@ MonoBehaviour:
   m_Script: {fileID: -359881765, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_radius0: 0.5
-  m_radius1: 0.5
-  m_height: 2
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Radius0: 0.5
+  m_Radius1: 0.5
+  m_Height: 2
 --- !u!114 &114894634540640650
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -269,14 +266,14 @@ MonoBehaviour:
   m_Script: {fileID: -1470385246, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mass: 1
-  m_centerOfMass: {x: 0, y: 0, z: 0}
+  m_Mass: 1
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_Ixx: 0
   m_Iyy: 0
   m_Izz: 0
   m_CalculateInertia: 1
-  m_isScene: 0
-  m_showGizmo: 0
-  m_gizmoScale: 1
-  m_linearDamping: 0.1
-  m_angularDamping: {x: 0.1, y: 0.1, z: 0.1}
+  m_IsScene: 0
+  m_ShowGizmo: 0
+  m_GizmoScale: 1
+  m_LinearDamping: 0.1
+  m_AngularDamping: {x: 0.1, y: 0.1, z: 0.1}

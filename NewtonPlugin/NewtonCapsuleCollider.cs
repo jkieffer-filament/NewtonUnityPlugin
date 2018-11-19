@@ -26,15 +26,25 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Colliders/Capsule")]
     public class NewtonCapsuleCollider : NewtonCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
-            dNewtonCollision collider = new dNewtonCollisionCapsule(world.GetWorld(), m_radius0, m_radius1, m_height);
+            dNewtonCollision collider = new dNewtonCollisionCapsule(world.GetWorld(), m_Radius0, m_Radius1, m_Height);
             SetMaterial(collider);
             SetLayer(collider);
             return collider;
         }
 
-        public float m_radius0 = 0.5f;
-        public float m_radius1 = 0.5f;
-        public float m_height = 1.0f;
+        public float Radius0 { get { return m_Radius0; } }
+        public float Radius1 { get { return m_Radius1; } }
+        public float Height { get { return m_Height; } }
+
+
+        #region Inspector
+        [SerializeField]
+        private float m_Radius0 = 0.5f;
+        [SerializeField]
+        private float m_Radius1 = 0.5f;
+        [SerializeField]
+        private float m_Height = 1.0f;
+        #endregion
     }
 }
 

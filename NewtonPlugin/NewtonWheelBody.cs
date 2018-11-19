@@ -30,28 +30,21 @@ namespace Newton {
     class NewtonWheelCollider : NewtonChamferedCylinderCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
             dNewtonCollision shape = base.Create(world);
-            m_scale.y = 1.0f;
+            m_Scale.y = 1.0f;
             return shape;
         }
     }
 
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NewtonWheelCollider))]
-    [AddComponentMenu("Newton Physics/Vehicle/Rigid Body Wheel")]
-    class NewtonBodyWheel : NewtonBody {
+    [AddComponentMenu("Newton Physics/Vehicle/Rigid Wheel Body")]
+    class NewtonWheelBody : NewtonBody {
         void Start() {
             m_IsScene = false;
-            m_shape = GetComponent<NewtonWheelCollider>();
-            m_shape.m_scale = new Vector3(1.0f, 1.0f, 1.0f);
+            m_Shape = GetComponent<NewtonWheelCollider>();
+            m_Shape.m_Scale = new Vector3(1.0f, 1.0f, 1.0f);
         }
-        /*
-            protected override void CreateBodyAndCollision()
-            {
-                Debug.Log("create actual wheel");
-                m_collision = new NewtonBodyCollision(this);
-                m_body = new dNewtonDynamicBody(m_world.GetWorld(), m_collision.GetShape(), Utils.ToMatrix(transform.position, transform.rotation), m_mass);
-            }
-        */
+
         public void CreateTire() {
             Debug.Log("create actual wheel");
 
@@ -59,7 +52,7 @@ namespace Newton {
 
             dTireData data = new dTireData();
             //data.m_owner = GCHandle.ToIntPtr(handle);
-            m_wheel = new dNewtonWheel((dNewtonVehicle)m_owner.m_Body, data);
+            m_Wheel = new dNewtonWheel((dNewtonVehicle)m_Vehicle.m_Body, data);
         }
 
         public void DestroyTire() {
@@ -67,37 +60,51 @@ namespace Newton {
             //var handle = GCHandle.FromIntPtr(m_wheel.GetUserData());
             //handle.Free();
 
-            m_wheel.Dispose();
-            m_wheel = null;
+            m_Wheel.Dispose();
+            m_Wheel = null;
         }
 
         public override void InitRigidBody() {
-            if (m_owner == null) {
+            if (m_Vehicle == null) {
                 // if the tire is not attached to a vehicle the this is simple rigid body 
                 base.InitRigidBody();
             }
         }
 
-        [Header("wheel data")]
-        public NewtonBodyVehicle m_owner = null;
-        public float m_pivotOffset = 0.0f;
+        public NewtonVehicleBody Vechicle {  get { return m_Vehicle; } }
+
+        #region Inspector
+        [SerializeField]
+        private NewtonVehicleBody m_Vehicle = null;
+        [SerializeField]
+        private float m_PivotOffset = 0.0f;
         [Range(0.0f, 45.0f)]
-        public float m_maxSteeringAngle = 20.0f;
-        public float m_suspesionDamping = 1000.0f;
-        public float m_suspesionSpring = 100.0f;
-        public float m_suspesionlenght = 0.3f;
+        [SerializeField]
+        private float m_MaxSteeringAngle = 20.0f;
+        [SerializeField]
+        private float m_SuspensionDamping = 1000.0f;
+        [SerializeField]
+        private float m_SuspensionSpring = 100.0f;
+        [SerializeField]
+        private float m_SuspensionLength = 0.3f;
         [Range(0.0f, 1.0f)]
-        public float m_lateralStiffness = 0.5f;
+        [SerializeField]
+        private float m_LateralStiffness = 0.5f;
         [Range(0.0f, 1.0f)]
-        public float m_longitudialStiffness = 0.5f;
+        [SerializeField]
+        private float m_LongitudialStiffness = 0.5f;
         [Range(0.0f, 1.0f)]
-        public float m_aligningMomentTrail = 0.5f;
+        [SerializeField]
+        private float m_AligningMomentTrail = 0.5f;
         [Range(0, 2)]
-        public int m_suspentionType = 1;
-        public bool m_hasFender = false;
-        //void* m_userData;
-        NewtonWheelCollider m_shape = null;
-        dNewtonWheel m_wheel = null;
+        [SerializeField]
+        private int m_SuspentionType = 1;
+        [SerializeField]
+        private bool m_HasFender = false;
+        #endregion // Inspector
+
+        private NewtonWheelCollider m_Shape = null;
+        private dNewtonWheel m_Wheel = null;
     }
 }
 

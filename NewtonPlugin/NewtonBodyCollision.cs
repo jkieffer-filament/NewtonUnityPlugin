@@ -122,7 +122,7 @@ namespace Newton {
                             foreach (NewtonCollider treeCollider in treeGameObject.GetComponents<NewtonCollider>()) {
                                 dNewtonCollision treeShape = treeCollider.CreateBodyShape(body.World);
                                 if (treeShape != null) {
-                                    Vector3 treePosit = terrain.transform.position + treeCollider.m_posit + posit;
+                                    Vector3 treePosit = terrain.transform.position + treeCollider.m_Position + posit;
                                     //Debug.Log("xxx1 " + treePosit);
                                     dMatrix matrix = Utils.ToMatrix(treePosit, Quaternion.identity);
                                     treeShape.SetMatrix(matrix);
@@ -135,7 +135,6 @@ namespace Newton {
                         }
                     }
                 }
-
 
                 foreach (Transform child in gameObject.transform) {
                     TraverseColliders(child.gameObject, colliderList, rootObject, body);
@@ -248,7 +247,7 @@ namespace Newton {
             }
         }
 
-        public dNewtonCollision GetShape() {
+        internal dNewtonCollision GetShape() {
             return m_RootCollider.GetShape();
         }
 

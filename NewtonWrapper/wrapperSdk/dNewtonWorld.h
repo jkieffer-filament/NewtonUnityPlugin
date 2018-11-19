@@ -40,7 +40,7 @@ class rayHitInfo
 	float intersectParam;
 	int layermask;
 	void* managedBodyHandle;
-	const NewtonCollision* collider;
+	void* managedColliderHandle;
 	float position[3];
 	float normal[3];
 	dLong collisionID;
@@ -54,7 +54,7 @@ class rayHitInfo
 	{
 		intersectParam = 2.0f;
 		managedBodyHandle = nullptr;
-		collider = nullptr;
+		managedColliderHandle = nullptr;
 		position[0] = 0;
 		position[1] = 0;
 		position[2] = 0;

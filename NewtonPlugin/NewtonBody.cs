@@ -50,12 +50,17 @@ namespace Newton {
         }
 
         protected virtual void OnEnable() {
-            World.RegisterBody(this);
+            if (World) {
+                World.RegisterBody(this);
+                m_Body.SetFreezeState(false);
+            }
         }
 
         protected virtual void OnDisable() {
-            if (World != null)
+            if (World) {
                 World.DeregisterBody(this);
+                m_Body.SetFreezeState(true);
+            }
         }
 
         // Update is called once per frame
@@ -121,7 +126,7 @@ namespace Newton {
             }
         }
 
-        public dNewtonBody GetBody() {
+        internal dNewtonBody GetBody() {
             if (World.GetWorld() == null) { throw new NullReferenceException("Native world instance is null. The World component was probably destroyed"); }
             if (!initialized) {
                 InitRigidBody();
@@ -316,6 +321,7 @@ namespace Newton {
 
         public NewtonWorld World { get; private set; }
 
+        #region Inspector
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_mass")]
         protected float m_Mass = 0.0f;
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_centerOfMass")]
@@ -339,7 +345,7 @@ namespace Newton {
         protected float m_LinearDamping = 0.1f;
         [SerializeField]
         private Vector3 m_AngularDamping = new Vector3(0.1f, 0.1f, 0.1f);
-
+        #endregion // Inspector
 
         private Vector3 m_ForceAcc;
         private Vector3 m_TorqueAcc;

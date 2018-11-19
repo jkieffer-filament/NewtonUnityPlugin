@@ -30,7 +30,7 @@ namespace Newton {
             return true;
         }
         public override Vector3 GetScale() {
-            if (m_freezeScale == true) {
+            if (m_FreezeScale == true) {
                 return new Vector3(1.0f, 1.0f, 1.0f);
             }
             return GetBaseScale();
@@ -41,27 +41,27 @@ namespace Newton {
         }
 
         public override dNewtonCollision Create(NewtonWorld world) {
-            if (m_mesh == null) {
+            if (m_Mesh == null) {
                 return null;
             }
 
-            if (m_mesh.triangles.Length < 3) {
+            if (m_Mesh.triangles.Length < 3) {
                 return null;
             }
 
             Vector3 scale = GetBaseScale();
-            if (m_freezeScale == false) {
+            if (m_FreezeScale == false) {
                 scale = new Vector3(1.0f, 1.0f, 1.0f);
             }
 
-            Vector3[] vertices = m_mesh.vertices;
+            Vector3[] vertices = m_Mesh.vertices;
             float[] triVertices = new float[3 * 3];
             IntPtr floatsPtr = Marshal.AllocHGlobal(3 * 3 * Marshal.SizeOf(typeof(float)));
 
             dNewtonCollisionMesh collision = new dNewtonCollisionMesh(world.GetWorld());
             collision.BeginFace();
-            for (int i = 0; i < m_mesh.subMeshCount; i++) {
-                int[] submesh = m_mesh.GetTriangles(i);
+            for (int i = 0; i < m_Mesh.subMeshCount; i++) {
+                int[] submesh = m_Mesh.GetTriangles(i);
                 for (int j = 0; j < submesh.Length; j += 3) {
                     int k = submesh[j];
                     triVertices[0] = vertices[k].x * scale.x;
@@ -83,10 +83,10 @@ namespace Newton {
                 }
             }
 
-            collision.EndFace(m_optimize);
+            collision.EndFace(m_Optimize);
             Marshal.FreeHGlobal(floatsPtr);
 
-            m_isTrigger = false;
+            m_IsTrigger = false;
             SetMaterial(collision);
             SetLayer(collision);
             return collision;
@@ -94,14 +94,25 @@ namespace Newton {
 
         public override void OnDrawGizmosSelected() {
             // static meshes can no be triggers.
-            m_isTrigger = false;
+            m_IsTrigger = false;
             base.OnDrawGizmosSelected();
         }
 
-        public Mesh m_mesh;
-        public bool m_optimize = true;
-        public bool m_rebuildMesh = false;
-        public bool m_freezeScale = true;
+        public Mesh Mesh {  get { return m_Mesh; } }
+        public bool Optimize { get { return m_Optimize; } }
+        public bool RebuildMesh { get { return m_RebuildMesh; } }
+        public bool FreezeScale { get { return m_FreezeScale; } }
+
+        #region Inspector
+        [SerializeField]
+        private Mesh m_Mesh;
+        [SerializeField]
+        private bool m_Optimize = true;
+        [SerializeField]
+        private bool m_RebuildMesh = false;
+        [SerializeField]
+        private bool m_FreezeScale = true;
+        #endregion
     }
 }
 

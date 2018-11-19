@@ -26,15 +26,22 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Colliders/Chamfered Cylinder")]
     public class NewtonChamferedCylinderCollider : NewtonCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
-            dNewtonCollision collider = new dNewtonCollisionChamferedCylinder(world.GetWorld(), m_radius, m_height);
+            dNewtonCollision collider = new dNewtonCollisionChamferedCylinder(world.GetWorld(), m_Radius, m_Height);
             SetMaterial(collider);
             SetLayer(collider);
-            m_scale.y = 4.0f;
+            m_Scale.y = 4.0f;
             return collider;
         }
 
-        public float m_radius = 0.25f;
-        public float m_height = 0.5f;
+        public float Radius { get { return m_Radius; } }
+        public float Height { get { return m_Height; } }
+
+        #region Inspector
+        [SerializeField]
+        private float m_Radius = 0.25f;
+        [SerializeField]
+        private float m_Height = 0.5f;
+        #endregion
     }
 }
 

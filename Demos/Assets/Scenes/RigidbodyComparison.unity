@@ -312,6 +312,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 75
       objectReference: {fileID: 0}
+    - target: {fileID: 114894634540640650, guid: 5b5af54eff12d9f49baa4e970930b5ed,
+        type: 2}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 114113469854497796, guid: 5b5af54eff12d9f49baa4e970930b5ed, type: 2}
@@ -1648,6 +1653,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 75
       objectReference: {fileID: 0}
+    - target: {fileID: 114894634540640650, guid: 5b5af54eff12d9f49baa4e970930b5ed,
+        type: 2}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 114113469854497796, guid: 5b5af54eff12d9f49baa4e970930b5ed, type: 2}
@@ -1923,6 +1933,16 @@ Prefab:
     - target: {fileID: 4058676854280676, guid: 5b5af54eff12d9f49baa4e970930b5ed, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114203320406203790, guid: 5b5af54eff12d9f49baa4e970930b5ed,
+        type: 2}
+      propertyPath: m_Radius0
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114203320406203790, guid: 5b5af54eff12d9f49baa4e970930b5ed,
+        type: 2}
+      propertyPath: m_Radius1
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -2466,19 +2486,19 @@ MonoBehaviour:
   m_Script: {fileID: -393850156, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_asyncUpdate: 1
-  m_serializeSceneOnce: 0
-  m_useParallerSolver: 1
-  m_saveSceneName: scene_01.bin
-  m_broadPhaseType: 0
-  m_numberOfThreads: 0
-  m_solverIterationsCount: 1
-  m_subSteps: 2
-  m_pluginsOptions: 0
-  m_gravity: {x: 0, y: -9.8, z: 0}
-  m_defaultRestitution: 0.4
-  m_defaultStaticFriction: 0.8
-  m_defaultKineticFriction: 0.6
+  m_AsyncUpdate: 1
+  m_SerializeSceneOnce: 0
+  m_UseParallerSolver: 0
+  m_SaveSceneName: scene_01.bin
+  m_BroadPhaseType: 0
+  m_NumberOfThreads: 0
+  m_SolverIterationsCount: 2
+  m_SubSteps: 2
+  m_PluginsOptions: 0
+  m_Gravity: {x: 0, y: -9.8, z: 0}
+  m_DefaultRestitution: 0.4
+  m_DefaultStaticFriction: 0.8
+  m_DefaultKineticFriction: 0.6
 --- !u!4 &1128207611
 Transform:
   m_ObjectHideFlags: 0
@@ -2662,17 +2682,15 @@ MonoBehaviour:
   m_Script: {fileID: -1562967349, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_size: {x: 1, y: 1, z: 1}
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Size: {x: 1, y: 1, z: 1}
 --- !u!1001 &1310704200
 Prefab:
   m_ObjectHideFlags: 0
@@ -3539,17 +3557,15 @@ MonoBehaviour:
   m_Script: {fileID: -1562967349, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_size: {x: 1, y: 1, z: 1}
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Size: {x: 1, y: 1, z: 1}
 --- !u!65 &1676309351
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3980,6 +3996,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 75
       objectReference: {fileID: 0}
+    - target: {fileID: 114894634540640650, guid: 5b5af54eff12d9f49baa4e970930b5ed,
+        type: 2}
+      propertyPath: m_Mass
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 114113469854497796, guid: 5b5af54eff12d9f49baa4e970930b5ed, type: 2}
@@ -4081,19 +4102,17 @@ MonoBehaviour:
   m_Script: {fileID: -359881765, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_radius0: 0.5
-  m_radius1: 0.5
-  m_height: 2
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Radius0: 0.25
+  m_Radius1: 0.25
+  m_Height: 0.5
 --- !u!64 &1987385457
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4329,17 +4348,15 @@ MonoBehaviour:
   m_Script: {fileID: -1562967349, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_size: {x: 1, y: 1, z: 1}
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Size: {x: 1, y: 1, z: 1}
 --- !u!114 &2087495566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4351,17 +4368,17 @@ MonoBehaviour:
   m_Script: {fileID: -1470385246, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mass: 0
-  m_centerOfMass: {x: 0, y: 0, z: 0}
+  m_Mass: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_Ixx: 0
   m_Iyy: 0
   m_Izz: 0
   m_CalculateInertia: 1
-  m_isScene: 1
-  m_showGizmo: 0
-  m_gizmoScale: 1
-  m_linearDamping: 0.1
-  m_angularDamping: {x: 0.1, y: 0.1, z: 0.1}
+  m_IsScene: 1
+  m_ShowGizmo: 0
+  m_GizmoScale: 1
+  m_LinearDamping: 0.1
+  m_AngularDamping: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!1001 &2087920314
 Prefab:
   m_ObjectHideFlags: 0
@@ -4529,16 +4546,14 @@ MonoBehaviour:
   m_Script: {fileID: -359881765, guid: 8040d3d372fd1874cb7643203d0088fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_material: {fileID: 0}
-  m_layer:
-    serializedVersion: 2
-    m_Bits: 0
-  m_posit: {x: 0, y: 0, z: 0}
-  m_rotation: {x: 0, y: 0, z: 0}
-  m_scale: {x: 1, y: 1, z: 1}
-  m_isTrigger: 0
-  m_showGizmo: 1
-  m_inheritTransformScale: 1
-  m_radius0: 0.5
-  m_radius1: 0.5
-  m_height: 2
+  m_Material: {fileID: 0}
+  m_Layer: 0
+  m_Position: {x: 0, y: 0, z: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 1, y: 1, z: 1}
+  m_IsTrigger: 0
+  m_ShowGizmo: 1
+  m_InheritTransformScale: 1
+  m_Radius0: 0.25
+  m_Radius1: 0.25
+  m_Height: 0.5

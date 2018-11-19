@@ -74,6 +74,16 @@ void dNewtonBody::SetSleepState(bool state) const
 	NewtonBodySetSleepState(m_body, state ? 1 : 0);
 }
 
+bool dNewtonBody::GetFreezeState() const
+{
+	return NewtonBodyGetFreezeState(m_body) ? true : false;
+}
+
+void dNewtonBody::SetFreezeState(bool state) const
+{
+	NewtonBodySetFreezeState(m_body, state ? 1 : 0);
+}
+
 void* dNewtonBody::GetInterpolatedPosition()
 {
 	const dNewtonWorld* const world = (dNewtonWorld*)NewtonWorldGetUserData(NewtonBodyGetWorld(m_body));

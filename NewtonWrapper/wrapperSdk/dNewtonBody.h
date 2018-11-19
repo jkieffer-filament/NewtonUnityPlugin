@@ -80,6 +80,9 @@ class dNewtonBody: public dAlloc
 	bool GetSleepState() const;
 	void SetSleepState(bool state) const;
 
+	bool GetFreezeState() const;
+	void SetFreezeState(bool state) const;
+
 	protected:
 	virtual ~dNewtonBody();
 

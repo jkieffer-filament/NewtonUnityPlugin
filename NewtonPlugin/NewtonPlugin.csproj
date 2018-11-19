@@ -44,11 +44,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewtonKinematicBody.cs" />
     <Compile Include="NewtonBodyScript.cs" />
     <Compile Include="NewtonBody.cs" />
     <Compile Include="NewtonBodyCollision.cs" />
-    <Compile Include="NewtonBodyVehicle.cs" />
-    <Compile Include="NewtonBodyWheel.cs" />
+    <Compile Include="NewtonVehicleBody.cs" />
+    <Compile Include="NewtonWheelBody.cs" />
     <Compile Include="NewtonBoxCollider.cs" />
     <Compile Include="NewtonCapsuleCollider.cs" />
     <Compile Include="NewtonChamferedCylinderCollider.cs" />

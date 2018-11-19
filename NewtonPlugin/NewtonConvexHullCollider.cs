@@ -27,24 +27,24 @@ namespace Newton {
     [AddComponentMenu("Newton Physics/Colliders/Convex Hull")]
     public class NewtonConvexHullCollider : NewtonCollider {
         public override dNewtonCollision Create(NewtonWorld world) {
-            if (m_mesh == null) {
+            if (m_Mesh == null) {
                 return null;
             }
 
-            if (m_mesh.vertices.Length < 4) {
+            if (m_Mesh.vertices.Length < 4) {
                 return null;
             }
 
-            float[] array = new float[3 * m_mesh.vertices.Length];
-            for (int i = 0; i < m_mesh.vertices.Length; i++) {
-                array[i * 3 + 0] = m_mesh.vertices[i].x;
-                array[i * 3 + 1] = m_mesh.vertices[i].y;
-                array[i * 3 + 2] = m_mesh.vertices[i].z;
+            float[] array = new float[3 * m_Mesh.vertices.Length];
+            for (int i = 0; i < m_Mesh.vertices.Length; i++) {
+                array[i * 3 + 0] = m_Mesh.vertices[i].x;
+                array[i * 3 + 1] = m_Mesh.vertices[i].y;
+                array[i * 3 + 2] = m_Mesh.vertices[i].z;
             }
 
             IntPtr floatsPtr = Marshal.AllocHGlobal(array.Length * Marshal.SizeOf(typeof(float)));
             Marshal.Copy(array, 0, floatsPtr, array.Length);
-            dNewtonCollision collision = new dNewtonCollisionConvexHull(world.GetWorld(), m_mesh.vertices.Length, floatsPtr, 0.01f * (1.0f - m_quality));
+            dNewtonCollision collision = new dNewtonCollisionConvexHull(world.GetWorld(), m_Mesh.vertices.Length, floatsPtr, 0.01f * (1.0f - m_Quality));
             if (collision.IsValid() == false) {
                 collision.Dispose();
                 collision = null;
@@ -56,8 +56,15 @@ namespace Newton {
             return collision;
         }
 
-        public Mesh m_mesh;
-        public float m_quality = 0.5f;
+        public Mesh Mesh { get { return m_Mesh; } }
+        public float Quality { get { return m_Quality; } }
+
+        #region Inspector
+        [SerializeField]
+        private Mesh m_Mesh;
+        [SerializeField]
+        private float m_Quality = 0.5f;
+        #endregion
     }
 }
 
